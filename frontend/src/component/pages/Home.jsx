@@ -1,9 +1,13 @@
 import React from "react";
+import { Layout } from "../common/Layout";
 
 export const Home = () => {
   return (
     <>
-      <h1>this is home</h1>
+      <Layout>
+        <h1>Home</h1>
+
+      </Layout>
     </>
   );
 };
