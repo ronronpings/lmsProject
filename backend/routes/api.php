@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::post('users', [AccountController::class, 'register']);
+Route::post('register', [AccountController::class, 'register']);
 
 Route::get('/user', function (Request $request) {
     return $request->user();

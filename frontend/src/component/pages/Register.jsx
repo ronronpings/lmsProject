@@ -1,6 +1,36 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useForm } from 'react-hook-form';
+import { apiUrl } from "../common/Config";
+
+
 export const Register = ()=>{
+
+  //Handle submit on backend
+ const{
+      handleSubmit, register, formState: {errors}, setError
+  } = useForm();
+
+ const handleRegister = async (data) => {
+  console.log('form data:', data);
+  try {
+    const res = await fetch(`${apiUrl}register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+      body: JSON.stringify(data),
+    });
+
+    const result = await res.json();
+    console.log(result);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
    return(
      <>
         <section className="lms-register-page">
@@ -15,30 +45,59 @@ export const Register = ()=>{
         <div className="lms-register-card">
           <h2>Create your account</h2>
 
-          <form className="lms-register-form">
+          <form className="lms-register-form" onSubmit={handleSubmit(handleRegister)}>
             <div className="lms-register-field-group">
               <label htmlFor="fullName">Full Name *</label>
-              <input id="fullName" type="text" placeholder="Full Name" />
+             <input
+                {...register('name', {
+                  required: 'The name field is required.',
+                })}
+                className={`form-control ${errors.name ? 'is-invalid' : ''}`}
+                id="fullName"
+                type="text"
+                placeholder="Full Name"
+              />
+
+              {errors.name && (
+                <p className="invalid-feedback">{errors.name.message}</p>
+              )}
+
+              
             </div>
 
             <div className="lms-register-field-group">
               <label htmlFor="email">Email *</label>
-              <input id="email" type="email" placeholder="Email" />
+              <input 
+              
+               {
+                ...register('email', {
+                    required: "The email field is required.",
+                    pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                } 
+                })
+              }
+              className={`form-control ${errors.email ? 'is-invalid' : ''}`}
+              id="email" htmlFor="email" type="email" placeholder="Email" />
+              {
+                errors.email && <p className="invalid-feedback">{errors.email.message}</p>
+              }
             </div>
 
             <div className="lms-register-field-group">
               <label htmlFor="password">Password *</label>
-              <input id="password" type="password" placeholder="Password" />
+              <input
+               {
+                ...register('password', {
+                  required: "The password field is required."
+                })
+              }
+              
+              id="password" className={`form-control`} type="password" placeholder="Password" />
             </div>
 
-            <div className="lms-register-field-group">
-              <label htmlFor="confirmPassword">Confirm Password *</label>
-              <input
-                id="confirmPassword"
-                type="password"
-                placeholder="Confirm Password"
-              />
-            </div>
+         
 
             <div className="lms-register-actions">
               <button type="submit">CREATE ACCOUNT</button>
