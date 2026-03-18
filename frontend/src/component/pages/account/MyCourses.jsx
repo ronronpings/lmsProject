@@ -6,10 +6,9 @@ import {CourseEdit} from '../../common/CourseEdit'
 
 
 export const MyCourses = ()=> {
-
    return(
      <>
-      
+        <Layout>
              <section className='section-4'>
                 <div className='container'>
                     <div className='row'>
@@ -32,8 +31,7 @@ export const MyCourses = ()=> {
                     </div>
                 </div>
             </section>
-
-      
+        </Layout>   
     </>
    )
 }

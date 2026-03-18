@@ -47,6 +47,6 @@ class AccountController extends Controller
         'message' => 'Login successful.',
         'user' => $user,
         'access_token' => $token,
-    ],201);
+    ],200);
     }
 }
