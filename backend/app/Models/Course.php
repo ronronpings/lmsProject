@@ -7,4 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Course extends Model
 {
     //
+    protected $fillable = [
+    'title',
+    'user_id',
+    'category_id',
+    'language_id',
+    'description',
+    'price',
+    'cross_price',
+    'status',
+    'is_featured',
+    'image',
+];
+
 }

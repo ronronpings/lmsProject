@@ -7,7 +7,7 @@ export const Dashboard = ()=> {
     return(
         <>
         <Layout>
-            	<section className='section-4'>
+        <section className='section-4'>
              <div className='container pb-5 pt-3'>
 				<nav aria-label="breadcrumb">
 					<ol className="breadcrumb">

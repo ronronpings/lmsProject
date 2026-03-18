@@ -12,6 +12,9 @@ import { ChangePassword } from './component/pages/account/ChangePassword'
 import { Dashboard } from './component/pages/account/Dashboard'
 import { Toaster } from 'react-hot-toast'
 import { RequireAuth } from './component/common/RequireAuth'
+import { CreateCourse } from './component/pages/account/courses/CreateCourse'
+import { EditCourse } from './component/pages/account/courses/EditCourse'
+
 
 
 function App() {
@@ -37,6 +40,19 @@ function App() {
                 <Dashboard/>
               </RequireAuth>
             } />
+
+             <Route  path='/account/courses/create' element={
+              <RequireAuth>
+                <CreateCourse/>
+              </RequireAuth>
+            } />
+
+             <Route  path='/account/courses/edit/:id' element={
+              <RequireAuth>
+                <EditCourse/>
+              </RequireAuth>
+            } />
+
             {/* <Route path='/account/dashboard' element={<Dashboard/>} />       */}
 
         </Routes>
