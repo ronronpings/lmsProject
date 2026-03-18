@@ -27,4 +27,5 @@ class AccountController extends Controller
             'user' => $user,
         ], 201);
     }
+    
 }

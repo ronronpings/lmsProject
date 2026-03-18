@@ -1,11 +1,12 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from 'react-hook-form';
 import { apiUrl } from "../common/Config";
-
+import  toast  from "react-hot-toast";
 
 export const Register = ()=>{
-
+  //use navigate and declared it to react-router-dom
+  const navigate = useNavigate();
   //Handle submit on backend
  const{
       handleSubmit, register, formState: {errors}, setError
@@ -24,6 +25,9 @@ export const Register = ()=>{
     });
 
     const result = await res.json();
+    //import toast
+    toast.success(result.message);
+    navigate('/account/login');
     console.log(result);
   } catch (error) {
     console.error(error);
