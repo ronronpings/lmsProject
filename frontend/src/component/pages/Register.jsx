@@ -26,6 +26,19 @@ export const Register = ()=>{
 
     const result = await res.json();
     //import toast
+  
+    if (!res.ok) {
+      // Laravel validation errors example: { errors: { email: ["..."] } }
+      if (result?.errors) {
+        Object.keys(result.errors).forEach((field) => {
+          setError(field, {
+            type: "server",
+            message: result.errors[field][0],
+          });
+        });
+      }
+      return; // stop, do not navigate
+    }
     toast.success(result.message);
     navigate('/account/login');
     console.log(result);
