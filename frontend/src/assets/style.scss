@@ -1,11 +1,11 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 $primary-font:  "DM Sans", serif;
 
-$primary-color: #FEc748;
+$primary-color: #585858;
 $primary-white: #FFF;
 $primary-black: #000;
-$secondary-color: #1da599;
-$tertiary-color: #3ecbda;
+$secondary-color: #b3a4bd;
+$tertiary-color: #b3a4bd;
 $bg-light: #f6f3f3;
 $text-grey: #585858;
 
@@ -93,6 +93,24 @@ p{
  
     
 .header{
+    .navbar-brand{
+        height: 66px;
+        width: 100px;
+        margin-right: 16px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        overflow: visible;
+        padding: 0;
+        line-height: 1;
+    }
+    .brand-logo{
+        height: 66px;
+        width: auto;
+        display: block;
+        transform: scale(2);
+        transform-origin: left center;
+    }
     .nav-link{
         font-weight: 700;
     }
@@ -130,7 +148,7 @@ p{
 }
 
 .section-1{
-    background-color: $secondary-color;
+    background: linear-gradient(180deg, #8f89a9 0%, #cdb8c9 100%);
     color: $primary-white;
     position: relative;
     overflow: hidden;
@@ -655,5 +673,61 @@ footer{
     .lms-register-actions{
         flex-direction: column;
         align-items: flex-start;
+    }
+}
+
+/* Hero Section Tagline */
+.tagline {
+    display: inline-block;
+    font-size: 0.95rem;
+    font-weight: 600;
+    // color: #17a697;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+/* Confidence Section */
+.section-confidence {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    padding: 80px 0;
+    border-top: 1px solid #e9ecef;
+    margin-top: 60px;
+}
+
+.confidence-content {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.confidence-title {
+    font-size: 3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+}
+
+.confidence-title .text-muted {
+    color: #6c757d;
+    font-weight: 400;
+}
+
+.confidence-description {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #495057;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .confidence-title {
+        font-size: 2rem;
+    }
+    
+    .confidence-description {
+        font-size: 1rem;
     }
 }

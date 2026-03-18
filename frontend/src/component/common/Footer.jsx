@@ -8,8 +8,8 @@ export const Footer = ()=> {
                 
                 <div className='col-lg-3 col-12'>
                     <div className='col-lg-12 col-md-6 col-12 pe-lg-5'>
-                        <h2>LMS</h2>
-                        <p>Join our Learning Management System and explore a wide range of courses to enhance your skills and achieve your goals.</p>
+                        <h2>PRISM</h2>
+                        <p>Explore thousands of courses taught by industry experts. Learn at your own pace, anytime.</p>
                     </div>
                 </div>
 
@@ -38,7 +38,7 @@ export const Footer = ()=> {
             </div>
             <div className='row copyright'>
                 <div className='col-md-12 text-center py-4'>
-                    &copy; 2025 All Rights Reserverd
+                    &copy; 2026  All Rights Reserverd
                 </div>
             </div>
         </div>

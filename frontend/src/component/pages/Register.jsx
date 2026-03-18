@@ -12,7 +12,7 @@ export const Register = ()=>{
   } = useForm();
 
  const handleRegister = async (data) => {
-  console.log('form data:', data);
+  // console.log('form data:', data);
   try {
     const res = await fetch(`${apiUrl}register`, {
       method: 'POST',
@@ -48,9 +48,13 @@ export const Register = ()=>{
           <form className="lms-register-form" onSubmit={handleSubmit(handleRegister)}>
             <div className="lms-register-field-group">
               <label htmlFor="fullName">Full Name *</label>
-             <input
+              <input
                 {...register('name', {
                   required: 'The name field is required.',
+                  minLength: {
+                    value: 5,
+                    message: 'Name must be at least 5 characters.',
+                  },
                 })}
                 className={`form-control ${errors.name ? 'is-invalid' : ''}`}
                 id="fullName"

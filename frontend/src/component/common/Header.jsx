@@ -1,13 +1,15 @@
 import React from "react";
 import { Navbar, Container, Nav } from 'react-bootstrap'
-
+import PRISM from  '../../assets/images/PRISM.png'
 
 export const Header = ()=> {
     return(
         <>
-            <Navbar expand="md" className="bg-white shadow-lg header py-3">
+            <Navbar expand="md" className="bg-white shadow-lg header py-2">
                 <Container>
-                    <Navbar.Brand href="/"><strong>RonsDemy</strong></Navbar.Brand>
+                    <Navbar.Brand href="/">
+                        <img src={PRISM} alt="PRISM" className="brand-logo" />
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="navbarScroll" />
                     <Navbar.Collapse id="navbarScroll">
                     <Nav
