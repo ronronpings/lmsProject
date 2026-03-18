@@ -47,12 +47,8 @@ export const Login = ()=> {
          id: result?.user?.id,
          token:result?.access_token,
         }  
-      const userToken = {
-        token:result?.access_token,
-
-      } 
+      
       localStorage.setItem('userInfoLms',JSON.stringify(userInfo));
-      localStorage.setItem('userToken',JSON.stringify(userToken));
       login(userInfo);
       navigate('/account/dashboard');
     } catch (error) {
