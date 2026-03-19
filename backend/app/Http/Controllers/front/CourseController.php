@@ -5,7 +5,10 @@ namespace App\Http\Controllers\front;
 use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Account\CourseStoreRequest;
+use App\Models\Category;
 use App\Models\Course;
+use App\Models\Language;
+use App\Models\Levels;
 use Auth;
 use Illuminate\Http\Request;
 
@@ -27,6 +30,19 @@ class CourseController extends Controller
         'message' => 'Course created successfully.',
         'data' => $course
     ], 201);
+    }
 
+    //retrieve level/language/categories
+    public function retrieve(){
+        $categories = Category::all();
+        $levels = Levels::all();
+        $languages = Language::all();
+
+        return response()->json([
+            'status' => 200,
+            'categories' => $categories,
+            'levels' => $levels,
+            'languages' => $languages,
+        ],200);
     }
 }
