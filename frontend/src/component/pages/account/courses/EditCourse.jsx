@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 export const EditCourse = () =>{
 
     const params = useParams();
+    //loading if submiting
+    const [loading, setLoading] = useState(false);
 
     const {
         handleSubmit, register, formState: {errors}, reset,setError
@@ -68,10 +70,11 @@ export const EditCourse = () =>{
 
 
     const onSubmit = async (data) => {
+    setLoading(true);
      try {
-      const res = await fetch(`${apiUrl}courses`, {
+      const res = await fetch(`${apiUrl}courses/update/${params.id}`, {
         
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
@@ -97,11 +100,15 @@ export const EditCourse = () =>{
         toast.error(result.message);
         return; // stop, do not navigate
       }
-      toast.success("Created Successfully");
-      navigate('/account/courses/edit/' + result.data.id);
+      
+      toast.success("Updated Successfully");
+    //   navigate('/account/courses/edit/' + result.data.id);
     } catch (error) {
-    console.log(error);
+     console.log(error);
     }
+    finally {
+     setLoading(false);
+     }
     }
 
     //Retrive Data from backend api 
@@ -284,7 +291,9 @@ export const EditCourse = () =>{
                                                 type="text" className="form-control" placeholder=" Cross Price" id="cross-price" />
                                             </div>
 
-                                            <button className="btn btn-primary">Update</button>
+                                            <button disabled={loading} className="btn btn-primary">
+                                                { loading == false ? 'Update' : 'Please Wait...' }
+                                                </button>
                                         </div>
                                     </div>
                             </form>

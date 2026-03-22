@@ -17,6 +17,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //show and retrive data on select
     Route::get('/courses/meta-data', [CourseController::class, 'retrieve']);
     Route::get('/courses/{id}', [CourseController::class, 'show']);
+    Route::put('/courses/update/{id}', [CourseController::class, 'update']);
     //
 
 });

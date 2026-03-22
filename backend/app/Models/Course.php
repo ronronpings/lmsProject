@@ -11,6 +11,7 @@ class Course extends Model
     'title',
     'user_id',
     'category_id',
+    'level_id',
     'language_id',
     'description',
     'price',

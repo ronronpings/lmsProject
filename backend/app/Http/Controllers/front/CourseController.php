@@ -62,4 +62,15 @@ class CourseController extends Controller
             'languages' => $languages,
         ],200);
     }
+    public function update(CourseStoreRequest $request, $id){
+        $course = Course::findOrFail($id);
+        $data = $request->validated();
+       
+        $course->update($data);
+
+        return response()->json([
+         'message'=> 'Course updated successfully',
+         'data'=> $course->fresh()
+        ],200);
+    }
 }
