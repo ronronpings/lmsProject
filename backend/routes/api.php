@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\CourseController;
+use App\Http\Controllers\front\OutcomeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,7 +19,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/courses/meta-data', [CourseController::class, 'retrieve']);
     Route::get('/courses/{id}', [CourseController::class, 'show']);
     Route::put('/courses/update/{id}', [CourseController::class, 'update']);
-    //
+    
+    //outcomes
+    Route::get('/outcomes', [OutcomeController::class, 'index']);
+    Route::post('/outcomes', [OutcomeController::class, 'store']);
+    Route::put('/outcomes/{id}', [OutcomeController::class, 'update']);
+    Route::delete('/outcomes/{id}', [OutcomeController::class, 'delete']);
 
 });
    
