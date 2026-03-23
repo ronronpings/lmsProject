@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Layout } from "../../../common/Layout";
-import { UserSidebar } from "../../../common/UserSidebar";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { apiUrl, token } from "../../../common/Config";
-import toast from "react-hot-toast";
-import { ManageOutcome } from "./ManageOutcome";
+import React, { useEffect, useState } from 'react';
+import { Layout } from '../../../common/Layout';
+import { UserSidebar } from '../../../common/UserSidebar';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import { apiUrl, token } from '../../../common/Config';
+import toast from 'react-hot-toast';
+import { ManageOutcome } from './ManageOutcome';
 
 export const EditCourse = () => {
   const params = useParams();
@@ -24,10 +24,10 @@ export const EditCourse = () => {
       defaultValues: async () => {
         try {
           const res = await fetch(`${apiUrl}courses/${params.id}`, {
-            method: "GET",
+            method: 'GET',
             headers: {
-              "Content-Type": "application/json",
-              Accept: "application/json",
+              'Content-Type': 'application/json',
+              Accept: 'application/json',
               //add token for the authorization
               Authorization: `Bearer ${token}`,
             },
@@ -39,7 +39,7 @@ export const EditCourse = () => {
             if (result?.errors) {
               Object.keys(result.errors).forEach((field) => {
                 setError(field, {
-                  type: "server",
+                  type: 'server',
                   message: result.errors[field][0],
                 });
               });
@@ -52,9 +52,9 @@ export const EditCourse = () => {
           //reset para ipakita yung current data on field form
           reset({
             title: result.data.title,
-            category_id: String(result?.data?.category_id ?? ""),
-            level_id: String(result?.data?.level_id ?? ""),
-            language_id: String(result?.data?.language_id ?? ""),
+            category_id: String(result?.data?.category_id ?? ''),
+            level_id: String(result?.data?.level_id ?? ''),
+            language_id: String(result?.data?.language_id ?? ''),
             description: result.data.description,
             price: result.data.price,
             cross_price: result.data.cross_price,
@@ -63,7 +63,7 @@ export const EditCourse = () => {
           console.log(error);
         }
       },
-    },
+    }
   );
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
@@ -74,10 +74,10 @@ export const EditCourse = () => {
     setLoading(true);
     try {
       const res = await fetch(`${apiUrl}courses/update/${params.id}`, {
-        method: "PUT",
+        method: 'PUT',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
           //add token for the authorization
           Authorization: `Bearer ${token}`,
         },
@@ -86,12 +86,12 @@ export const EditCourse = () => {
 
       const result = await res.json();
       if (!res.ok) {
-        console.log("Backend validation errors:", result?.errors);
+        console.log('Backend validation errors:', result?.errors);
         // Laravel validation errors example: { errors: { email: ["..."] } }
         if (result?.errors) {
           Object.keys(result.errors).forEach((field) => {
             setError(field, {
-              type: "server",
+              type: 'server',
               message: result.errors[field][0],
             });
           });
@@ -101,7 +101,7 @@ export const EditCourse = () => {
         return; // stop, do not navigate
       }
 
-      toast.success("Updated Successfully");
+      toast.success('Updated Successfully');
       //   navigate('/account/courses/edit/' + result.data.id);
     } catch (error) {
       console.log(error);
@@ -114,10 +114,10 @@ export const EditCourse = () => {
   const retriveData = async () => {
     try {
       const res = await fetch(`${apiUrl}courses/meta-data`, {
-        method: "GET",
+        method: 'GET',
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
           //add token for the authorization
           Authorization: `Bearer ${token}`,
         },
@@ -129,7 +129,7 @@ export const EditCourse = () => {
         if (result?.errors) {
           Object.keys(result.errors).forEach((field) => {
             setError(field, {
-              type: "server",
+              type: 'server',
               message: result.errors[field][0],
             });
           });
@@ -185,11 +185,11 @@ export const EditCourse = () => {
                             Title
                           </label>
                           <input
-                            {...register("title", {
-                              required: "The title field is required",
+                            {...register('title', {
+                              required: 'The title field is required',
                             })}
                             type="text"
-                            className={`form-control ${errors.title ? "is-invalid" : ""}`}
+                            className={`form-control ${errors.title ? 'is-invalid' : ''}`}
                             placeholder="Title"
                           />
                           {errors.title && (
@@ -203,10 +203,10 @@ export const EditCourse = () => {
                             Category
                           </label>
                           <select
-                            className={`form-select ${errors.category_id ? "is-invalid" : ""}`}
+                            className={`form-select ${errors.category_id ? 'is-invalid' : ''}`}
                             id="category"
-                            {...register("category_id", {
-                              required: "The category field is required",
+                            {...register('category_id', {
+                              required: 'The category field is required',
                             })}
                           >
                             <option value="">Select Category</option>
@@ -230,10 +230,10 @@ export const EditCourse = () => {
                             Level
                           </label>
                           <select
-                            className={`form-select ${errors.level_id ? "is-invalid" : ""}`}
+                            className={`form-select ${errors.level_id ? 'is-invalid' : ''}`}
                             id="level"
-                            {...register("level_id", {
-                              required: "The level field is requried",
+                            {...register('level_id', {
+                              required: 'The level field is requried',
                             })}
                           >
                             <option value="">Select Level</option>
@@ -254,10 +254,10 @@ export const EditCourse = () => {
                             Language
                           </label>
                           <select
-                            className={`form-select ${errors.language_id ? "is-invalid" : ""}`}
+                            className={`form-select ${errors.language_id ? 'is-invalid' : ''}`}
                             id="level"
-                            {...register("language_id", {
-                              required: "This language field is required",
+                            {...register('language_id', {
+                              required: 'This language field is required',
                             })}
                           >
                             <option value="">Select Language</option>
@@ -282,7 +282,7 @@ export const EditCourse = () => {
                             rows={5}
                             placeholder="Description"
                             className="form-control"
-                            {...register("description", {})}
+                            {...register('description', {})}
                           ></textarea>
                         </div>
 
@@ -292,11 +292,11 @@ export const EditCourse = () => {
                             Sell Price
                           </label>
                           <input
-                            {...register("price", {
-                              required: "The sell price field is required",
+                            {...register('price', {
+                              required: 'The sell price field is required',
                             })}
                             type="text"
-                            className={`form-control ${errors.price ? "is-invalid" : ""}`}
+                            className={`form-control ${errors.price ? 'is-invalid' : ''}`}
                             placeholder=" Sell Price"
                             id="sell-price"
                           />
@@ -311,7 +311,7 @@ export const EditCourse = () => {
                             Cross Price
                           </label>
                           <input
-                            {...register("cross_price", {})}
+                            {...register('cross_price', {})}
                             type="text"
                             className="form-control"
                             placeholder=" Cross Price"
@@ -320,7 +320,7 @@ export const EditCourse = () => {
                         </div>
 
                         <button disabled={loading} className="btn btn-primary">
-                          {loading == false ? "Update" : "Please Wait..."}
+                          {loading == false ? 'Update' : 'Please Wait...'}
                         </button>
                       </div>
                     </div>
@@ -329,6 +329,9 @@ export const EditCourse = () => {
 
                 <div className="col-md-5">
                   <ManageOutcome />
+                  <div className="mt-3">
+                    <ManageOutcome />
+                  </div>
                 </div>
               </div>
             </div>
