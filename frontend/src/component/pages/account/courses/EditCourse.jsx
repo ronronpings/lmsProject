@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { apiUrl, token } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import { ManageOutcome } from './ManageOutcome';
+import { ManageRequirements } from './ManageRequirements';
 
 export const EditCourse = () => {
   const params = useParams();
@@ -330,7 +331,7 @@ export const EditCourse = () => {
                 <div className="col-md-5">
                   <ManageOutcome />
                   <div className="mt-3">
-                    <ManageOutcome />
+                    <ManageRequirements />
                   </div>
                 </div>
               </div>

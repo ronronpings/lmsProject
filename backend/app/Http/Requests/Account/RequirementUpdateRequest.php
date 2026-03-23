@@ -5,7 +5,7 @@ namespace App\Http\Requests\Account;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class OutcomeStoreRequest extends FormRequest
+class RequirementUpdateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,9 @@ class OutcomeStoreRequest extends FormRequest
     {
         return [
             //
-            "course_id"=> ['required'],
-            "text"=> ['required'],
+            'text' => ['required'],
+            'course_id' => ['nullable'],
+            'sort_order' => ['nullable']
         ];
     }
 }
