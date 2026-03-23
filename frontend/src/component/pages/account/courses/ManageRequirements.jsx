@@ -9,6 +9,9 @@ import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
 import { UpdateRequirements } from './UpdateRequirements';
 
+//drag and drop
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+
 export const ManageRequirements = () => {
   const {
     handleSubmit,
@@ -183,6 +186,51 @@ export const ManageRequirements = () => {
     }
   };
 
+  //drag and drop
+  const handleDragEnd = (result) => {
+    if (!result.destination) return; // Kapag binitawan sa labas ng listahan
+    const items = Array.from(requirements);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setRequirements(items);
+    saveOrder(items);
+  };
+
+  const saveOrder = async (updatedRequirements) => {
+    try {
+      const res = await fetch(`${apiUrl}sort-requirements`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          //add token for the authorization
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text: updatedRequirements }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        console.log('Backend validation errors:', result?.errors);
+        // Laravel validation errors example: { errors: { email: ["..."] } }
+        if (result?.errors) {
+          Object.keys(result.errors).forEach((field) => {
+            setError(field, {
+              type: 'server',
+              message: result.errors[field][0],
+            });
+          });
+        }
+        //appear toast if invalid credentials comes from backend
+        toast.error(result.message);
+        return; // stop, do not navigate
+      }
+      toast.success(result.message);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="card shadow-lg border-0">
@@ -210,7 +258,59 @@ export const ManageRequirements = () => {
           </form>
           {/* display the requirements */}
 
-          {requirements &&
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="requirements">
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {requirements &&
+                    requirements.map((requirement, index) => (
+                      <Draggable
+                        key={requirement.id.toString()}
+                        draggableId={requirement.id.toString()}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            className="card shadow mb-2"
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <div className="card-body p-2 d-flex">
+                              <div>
+                                <MdDragIndicator />
+                              </div>
+                              <div className="d-flex justify-content-between w-100">
+                                <div className="ps-2">{requirement.text}</div>
+                                <div className="d-flex">
+                                  <Link
+                                    className="text-primary me-1"
+                                    onClick={() => handleShow(requirement)}
+                                  >
+                                    <BsPencilSquare />
+                                  </Link>
+                                  <Link
+                                    className="text-danger"
+                                    onClick={() =>
+                                      deleteRequirements(requirement.id)
+                                    }
+                                  >
+                                    <FaTrashAlt />
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
+
+          {/* {requirements &&
             requirements.map((requirement) => {
               return (
                 <div className="card shadow mb-2" key={requirement.id}>
@@ -238,7 +338,7 @@ export const ManageRequirements = () => {
                   </div>
                 </div>
               );
-            })}
+            })} */}
         </div>
       </div>
 

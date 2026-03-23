@@ -13,8 +13,9 @@ class OutcomeController extends Controller
     //This method return all outcomes
     public function index(Request $request) {
 
-    
-       $outcomes = Outcome::where('course_id', $request->integer('course_id'))->get();
+      //since sorting is already implemented, we can just get the outcomes
+      //and the sort_order will handle the order
+       $outcomes = Outcome::where('course_id', $request->integer('course_id'))->orderBy('sort_order', 'asc')->get();
 
        return response()->json([
          'status' => 200,
@@ -50,5 +51,18 @@ class OutcomeController extends Controller
         'status' => 200,
         'message' => 'Outcome deleted Successfully'
       ],200);
+    }
+    public function sortOutcomes(Request $request) {
+      
+      foreach($request->text as $key => $value){
+        $outcome = Outcome::findOrFail($value['id']); //find the id of the outcome
+        $outcome->sort_order = $key; //update the sort order
+        $outcome->save(); //save the changes
+      }
+      return response()->json([
+        'status' => 200,
+        'message' => 'Order updated successfully'
+      ],200);
+
     }
 }

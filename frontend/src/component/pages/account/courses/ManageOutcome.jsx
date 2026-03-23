@@ -12,6 +12,9 @@ import { FaTrashAlt } from 'react-icons/fa';
 
 import { UpdateOutcome } from './UpdateOutcome';
 
+//Drag and Drop
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
+
 export const ManageOutcome = () => {
   //loading if submiting
   const [loading, setLoading] = useState(false);
@@ -27,6 +30,51 @@ export const ManageOutcome = () => {
     // console.log('Clicked Outcome ID:', outcome.id);
     setShowOutcome(true);
     setOutcomesData(outcome);
+  };
+
+  //drag and drop state
+  const handleDragEnd = (result) => {
+    if (!result.destination) return; // Kapag binitawan sa labas ng listahan
+    const items = Array.from(outcomes);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setOutcomes(items); // I-update ang state base sa bagong pagkakasunod-sunod
+    saveOrder(items);
+  };
+
+  const saveOrder = async (updatedOutcomes) => {
+    try {
+      const res = await fetch(`${apiUrl}sort-outcomes`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          //add token for the authorization
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ text: updatedOutcomes }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) {
+        console.log('Backend validation errors:', result?.errors);
+        // Laravel validation errors example: { errors: { email: ["..."] } }
+        if (result?.errors) {
+          Object.keys(result.errors).forEach((field) => {
+            setError(field, {
+              type: 'server',
+              message: result.errors[field][0],
+            });
+          });
+        }
+        //appear toast if invalid credentials comes from backend
+        toast.error(result.message);
+        return; // stop, do not navigate
+      }
+      toast.success(result.message);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const {
@@ -181,6 +229,7 @@ export const ManageOutcome = () => {
       }
     }
   };
+
   return (
     <>
       <div className="card shadow-lg border-0">
@@ -207,8 +256,57 @@ export const ManageOutcome = () => {
               {loading == false ? 'Save' : 'Please Wait...'}
             </button>
           </form>
+          <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="outcomes-list">
+              {(provided) => (
+                <div {...provided.droppableProps} ref={provided.innerRef}>
+                  {outcomes &&
+                    outcomes.map((outcome, index) => (
+                      <Draggable
+                        key={outcome.id.toString()}
+                        draggableId={outcome.id.toString()}
+                        index={index}
+                      >
+                        {(provided) => (
+                          <div
+                            className="card shadow mb-2"
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <div className="card-body p-2 d-flex">
+                              <div>
+                                <MdDragIndicator />
+                              </div>
+                              <div className="d-flex justify-content-between w-100">
+                                <div className="ps-2">{outcome.text}</div>
+                                <div className="d-flex">
+                                  <Link
+                                    className="text-primary me-1"
+                                    onClick={() => handleShow(outcome)}
+                                  >
+                                    <BsPencilSquare />
+                                  </Link>
+                                  <Link
+                                    className="text-danger"
+                                    onClick={() => deleteOutcomes(outcome.id)}
+                                  >
+                                    <FaTrashAlt />
+                                  </Link>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </Draggable>
+                    ))}
+                  {provided.placeholder}
+                </div>
+              )}
+            </Droppable>
+          </DragDropContext>
 
-          {outcomes &&
+          {/* {outcomes &&
             outcomes.map((outcome) => {
               return (
                 <div className="card shadow mb-2" key={outcome.id}>
@@ -236,7 +334,7 @@ export const ManageOutcome = () => {
                   </div>
                 </div>
               );
-            })}
+            })} */}
         </div>
       </div>
 
