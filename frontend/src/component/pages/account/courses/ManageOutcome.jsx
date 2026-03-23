@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { apiUrl, token } from '../../../common/Config';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import Swal from 'sweetalert2';
 
 //icons
 import { MdDragIndicator } from 'react-icons/md';
@@ -129,7 +130,17 @@ export const ManageOutcome = () => {
 
   //delete
   const deleteOutcomes = async (id) => {
-    if (confirm('Are you sure you want to delete?')) {
+    const swalAlert = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (swalAlert.isConfirmed) {
       try {
         const res = await fetch(`${apiUrl}outcomes/${id}`, {
           method: 'DELETE',
@@ -208,20 +219,18 @@ export const ManageOutcome = () => {
                     <div className="d-flex justify-content-between w-100">
                       <div className="ps-2">{outcome.text}</div>
                       <div className="d-flex">
-                        <a
-                          href="#"
+                        <Link
                           className="text-primary me-1"
                           onClick={() => handleShow(outcome)}
                         >
                           <BsPencilSquare />
-                        </a>
-                        <a
-                          href="#"
+                        </Link>
+                        <Link
                           className="text-danger"
                           onClick={() => deleteOutcomes(outcome.id)}
                         >
                           <FaTrashAlt />
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
