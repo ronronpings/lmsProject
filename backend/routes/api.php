@@ -24,7 +24,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/outcomes', [OutcomeController::class, 'index']);
     Route::post('/outcomes', [OutcomeController::class, 'store']);
     Route::put('/outcomes/{id}', [OutcomeController::class, 'update']);
-    Route::delete('/outcomes/{id}', [OutcomeController::class, 'delete']);
+    Route::delete('/outcomes/{id}', [OutcomeController::class, 'destroy']);
 
 });
    

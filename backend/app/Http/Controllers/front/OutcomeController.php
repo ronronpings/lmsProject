@@ -4,6 +4,7 @@ namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Account\OutcomeStoreRequest;
+use App\Http\Requests\Account\OutcomeUpdateRequest;
 use App\Models\Outcome;
 use Illuminate\Http\Request;
 
@@ -30,7 +31,7 @@ class OutcomeController extends Controller
         'data' => $outcome
     ], 201);
     }
-    public function update(OutcomeStoreRequest $request, $id) {
+    public function update(OutcomeUpdateRequest $request, $id) {
         $outcome = Outcome::findOrFail($id);
         $data = $request->validated();
         $data['sort_order'] = 1000;
@@ -41,15 +42,13 @@ class OutcomeController extends Controller
          'data'=> $outcome->fresh()
         ],200);
     }
-    public function destroy(Request $request , $id) {
+    public function destroy($id) {
       $outcome = Outcome::findOrFail($id);
-
-
       $outcome->delete();
 
       return response()->json([
         'status' => 200,
-        'message' => 'Outcome updated Successfully'
+        'message' => 'Outcome deleted Successfully'
       ],200);
     }
 }
