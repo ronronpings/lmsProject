@@ -7,11 +7,15 @@ import { apiUrl, token } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import { ManageOutcome } from './ManageOutcome';
 import { ManageRequirements } from './ManageRequirements';
+import { EditCover } from './EditCover';
 
 export const EditCourse = () => {
   const params = useParams();
   //loading if submiting
   const [loading, setLoading] = useState(false);
+
+  //add course data state para sa pag update ng cover image
+  const [course, setCourse] = useState({});
 
   const {
     handleSubmit,
@@ -45,11 +49,14 @@ export const EditCourse = () => {
                 });
               });
             }
+
             //appear toast if invalid credentials comes from backend
             toast.error(result.message);
             return; // stop, do not navigate
           }
           // console.log(result);
+          //SUCCESS: add course data state para sa pag update ng course cover image
+          setCourse(result.data);
           //reset para ipakita yung current data on field form
           reset({
             title: result.data.title,
@@ -332,6 +339,11 @@ export const EditCourse = () => {
                   <ManageOutcome />
                   <div className="mt-3">
                     <ManageRequirements />
+                  </div>
+                  <div className="mt-3">
+                    {course.id && (
+                      <EditCover course={course} setCourse={setCourse} />
+                    )}
                   </div>
                 </div>
               </div>
