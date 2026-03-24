@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Chapter;
 use Illuminate\Database\Eloquent\Model;
 
 class Course extends Model
@@ -30,6 +31,11 @@ class Course extends Model
             return "";
         }
         return asset('uploads/course/small/'.$this->image);
+    }
+
+    //set relationship to the chapter model para ma view
+    public function chapters(){
+        return $this->hasMany(Chapter::class);
     }
 
 }
