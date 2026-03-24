@@ -20,6 +20,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/courses/meta-data', [CourseController::class, 'retrieve']);
     Route::get('/courses/{id}', [CourseController::class, 'show']);
     Route::put('/courses/update/{id}', [CourseController::class, 'update']);
+    //course image
+    Route::post('/save-course-image/{id}', [CourseController::class, 'saveCourseImage']);
     
     //outcomes
     Route::get('/outcomes', [OutcomeController::class, 'index']);
@@ -34,6 +36,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::put('/requirements/{id}', [RequirementController::class, 'update']);
     Route::delete('/requirements/{id}', [RequirementController::class, 'destroy']);
     Route::post('/sort-requirements', [RequirementController::class, 'sortRequirements']);
+
+
 
 });
    

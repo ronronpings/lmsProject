@@ -21,4 +21,15 @@ class Course extends Model
     'image',
 ];
 
+    //append course small image to the course model
+    // para saan to? para kapag tinawag mo yung course model, kasama na yung course small image
+    protected $appends = ['course_small_image'];
+
+    public function getCourseSmallImageAttribute(){
+        if($this->image == ""){
+            return "";
+        }
+        return asset('uploads/course/small/'.$this->image);
+    }
+
 }

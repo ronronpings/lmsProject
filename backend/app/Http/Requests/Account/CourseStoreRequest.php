@@ -24,12 +24,13 @@ class CourseStoreRequest extends FormRequest
     {
         return [
             'title' => ['required'],
-            'category_id' => ['required', 'integer'],
-            'level_id' => ['required', 'integer'],
-            'language_id' => ['required', 'integer'],
+            'category_id' => [ 'nullable', 'integer'],
+            'level_id' => [ 'nullable', 'integer'],
+            'language_id' => [ 'nullable', 'integer'],
             'description' => ['nullable','string'],
             'price' => ['nullable', 'numeric'],
             'cross_price' => ['nullable', 'numeric'],
+            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }
 
@@ -45,6 +46,11 @@ class CourseStoreRequest extends FormRequest
 
         'language_id.required' => 'The language field is required.',
         'language_id.integer' => 'The language must be a valid number.',
+
+        'image.required' => 'The image field is required.',
+        'image.image' => 'The image must be an image.',
+        'image.mimes' => 'The image must be a valid image type.',
+        'image.max' => 'The image must be less than 2MB.',
 
     ];
     }

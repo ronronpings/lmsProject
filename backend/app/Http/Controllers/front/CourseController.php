@@ -11,6 +11,10 @@ use App\Models\Language;
 use App\Models\Levels;
 use Auth;
 use Illuminate\Http\Request;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\File;
+
 
 class CourseController extends Controller
 {   
@@ -72,5 +76,44 @@ class CourseController extends Controller
          'message'=> 'Course updated successfully',
          'data'=> $course->fresh()
         ],200);
+    }
+    public function saveCourseImage(Request $request, $id ){
+        $course = Course::findOrFail($id);
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
+        
+        //delete the old image if it exists
+        if($course->image != ""){
+            if(File::exists(public_path('uploads/course/'.$course->image))){
+                File::delete(public_path('uploads/course/'.$course->image));
+            }
+            if(File::exists(public_path('uploads/course/small/'.$course->image))){
+                File::delete(public_path('uploads/course/small/'.$course->image));
+            }
+        }
+
+        $image = $request->image; 
+        $ext = $image->getClientOriginalExtension(); //get the extension of the image(ex, png,jpg,gif)
+        $imageName = strtotime('now').'-'.$id.'.'.$ext; //create a unique name for the image
+        
+        $image->move(public_path('uploads/course'), $imageName); //move the image to the uploads/course folder
+
+        //Create small Thumbnail
+        $manager = new ImageManager(Driver::class); //initialize the image manager
+        $image = $manager->read(public_path('uploads/course/'.$imageName)); //read the image
+        //crop the best fitting
+        $image->cover(750,450); //crop the image to the best fitting
+        $image->save(public_path('uploads/course/small/'.$imageName)); //save the image to the uploads/course/small folder
+
+        $course->image = $imageName;
+        $course->save();
+
+        return response()->json([
+            'status' => 201,
+            'message' => 'Image uploaded successfully',
+            'data' => $course->fresh()
+        ],200);
+
     }
 }
