@@ -1,24 +1,38 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { apiUrl, token } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import Accordion from 'react-bootstrap/Accordion';
 import { UpdateChapter } from './UpdateChapter';
 import Swal from 'sweetalert2';
+import { CreateLesson } from './CreateLesson';
+
+//icons
+import { FaPlus } from 'react-icons/fa';
+import { BsPencilSquare } from 'react-icons/bs';
+import { FaTrashAlt } from 'react-icons/fa';
 
 export const ManageChapters = ({ course }) => {
   const [loading, setLoading] = useState(false);
   const params = useParams();
 
   //for the modal
-  const [showChapter, setShowChapter] = useState(false);
   const [chapterData, setChapterData] = useState(null);
 
+  //For chapter modal
+  const [showChapter, setShowChapter] = useState(false);
   const handleClose = () => setShowChapter(false);
   const handleShow = (chapter) => {
     setShowChapter(true);
     setChapterData(chapter);
+  };
+
+  //for lesson modal
+  const [showLessonModal, setShowLessonModal] = useState(false);
+  const handleCloseLessonModal = () => setShowLessonModal(false);
+  const handleShowLessonModal = () => {
+    setShowLessonModal(true);
   };
 
   const chapterReducer = (state, action) => {
@@ -148,7 +162,13 @@ export const ManageChapters = ({ course }) => {
       <div className="card shadow-lg border-0">
         <div className="card-body p-4">
           <div className="d-flex">
-            <h4 className="h5 mb-3">Manage Chapters</h4>
+            <div className="d-flex justify-content-between w-100">
+              <h4 className="h5 mb-3">Manage Chapters</h4>
+              <Link onClick={() => handleShowLessonModal()}>
+                <FaPlus size={12} />
+                <strong>Add Lesson</strong>
+              </Link>
+            </div>
           </div>
           <form className="mb-5" onSubmit={handleSubmit(onSubmit)}>
             <div className="mb-3">
@@ -176,20 +196,70 @@ export const ManageChapters = ({ course }) => {
                 <Accordion.Item eventKey={index} key={chapter.id}>
                   <Accordion.Header>{chapter.title}</Accordion.Header>
                   <Accordion.Body>
-                    <div className="d-flex">
-                      <div className="">
-                        <button
-                          className="btn btn-danger btn-sm"
-                          onClick={() => deleteChapter(chapter.id)}
-                        >
-                          Delete Chapter
-                        </button>
-                        <button
-                          className="btn btn-primary btn-sm ms-2"
-                          onClick={() => handleShow(chapter)}
-                        >
-                          Update Chapter
-                        </button>
+                    <div className="row">
+                      <div className="col-md-12">
+                        <div className="d-flex justify-content-between mb-2 mt-4">
+                          <h5 className="h5">Lessons</h5>
+                          <a className="h6" href="#" data-discover="true">
+                            <strong>Reorder Lessons</strong>
+                          </a>
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        {chapter.lessons &&
+                          chapter.lessons.map((lesson) => {
+                            return (
+                              <div
+                                className="card shadow px-3 py-2 mb-2"
+                                key={lesson.id}
+                              >
+                                {/* {lesson.title} */}
+                                <div className="row">
+                                  <div className="col-md-7">{lesson.title}</div>
+                                  <div className="col-md-5 text-end">
+                                    {lesson.duration > 0 && (
+                                      <small className="fw-bold text-muted me-2">
+                                        20 mins
+                                      </small>
+                                    )}
+
+                                    {lesson.is_free_preview == 'yes' && (
+                                      <span className="badge bg-success">
+                                        Preview
+                                      </span>
+                                    )}
+                                    <Link
+                                      to={`/account/courses/edit-lesson/${lesson.id}/${course.id}`}
+                                      className="ms-2"
+                                    >
+                                      <BsPencilSquare />
+                                    </Link>
+                                    <Link className="ms-2 text-danger">
+                                      <FaTrashAlt />
+                                    </Link>
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          })}
+                      </div>
+                      <div className="col-md-12 mt-3">
+                        <div className="d-flex">
+                          <div className="">
+                            <button
+                              className="btn btn-danger btn-sm"
+                              onClick={() => deleteChapter(chapter.id)}
+                            >
+                              Delete Chapter
+                            </button>
+                            <button
+                              className="btn btn-primary btn-sm ms-2"
+                              onClick={() => handleShow(chapter)}
+                            >
+                              Update Chapter
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </Accordion.Body>
@@ -205,6 +275,12 @@ export const ManageChapters = ({ course }) => {
         handleClose={handleClose}
         chapterData={chapterData}
         setChapters={setChapters}
+      />
+
+      <CreateLesson
+        showLessonModal={showLessonModal}
+        handleCloseLessonModal={handleCloseLessonModal}
+        course={course}
       />
     </>
   );

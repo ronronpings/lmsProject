@@ -1,19 +1,20 @@
-import { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Home } from "./component/pages/Home";
-import { Courses } from "./component/pages/Courses";
-import { Detail } from "./component/pages/Detail";
-import { Login } from "./component/pages/Login";
-import { Register } from "./component/pages/Register";
-import { MyCourses } from "./component/pages/account/MyCourses";
-import { MyLearning } from "./component/pages/account/MyLearning";
-import { WatchCourse } from "./component/pages/account/WatchCourse";
-import { ChangePassword } from "./component/pages/account/ChangePassword";
-import { Dashboard } from "./component/pages/account/Dashboard";
-import { Toaster } from "react-hot-toast";
-import { RequireAuth } from "./component/common/RequireAuth";
-import { CreateCourse } from "./component/pages/account/courses/CreateCourse";
-import { EditCourse } from "./component/pages/account/courses/EditCourse";
+import { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { Home } from './component/pages/Home';
+import { Courses } from './component/pages/Courses';
+import { Detail } from './component/pages/Detail';
+import { Login } from './component/pages/Login';
+import { Register } from './component/pages/Register';
+import { MyCourses } from './component/pages/account/MyCourses';
+import { MyLearning } from './component/pages/account/MyLearning';
+import { WatchCourse } from './component/pages/account/WatchCourse';
+import { ChangePassword } from './component/pages/account/ChangePassword';
+import { Dashboard } from './component/pages/account/Dashboard';
+import { Toaster } from 'react-hot-toast';
+import { RequireAuth } from './component/common/RequireAuth';
+import { CreateCourse } from './component/pages/account/courses/CreateCourse';
+import { EditCourse } from './component/pages/account/courses/EditCourse';
+import { EditLesson } from './component/pages/account/courses/EditLesson';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -55,6 +56,15 @@ function App() {
             element={
               <RequireAuth>
                 <EditCourse />
+              </RequireAuth>
+            }
+          />
+
+          <Route
+            path="/account/courses/edit-lesson/:id/:courseId"
+            element={
+              <RequireAuth>
+                <EditLesson />
               </RequireAuth>
             }
           />

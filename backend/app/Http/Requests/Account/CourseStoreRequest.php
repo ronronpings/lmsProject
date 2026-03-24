@@ -30,7 +30,7 @@ class CourseStoreRequest extends FormRequest
             'description' => ['nullable','string'],
             'price' => ['nullable', 'numeric'],
             'cross_price' => ['nullable', 'numeric'],
-            'image' => ['required', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
+            'image' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif', 'max:2048'],
         ];
     }
 
@@ -38,16 +38,10 @@ class CourseStoreRequest extends FormRequest
         return [
         'title.required' => 'The title field is required.',
 
-        'category_id.required' => 'The category field is required.',
         'category_id.integer' => 'The category must be a valid number.',
-
-        'level_id.required' => 'The level field is required.',
         'level_id.integer' => 'The level must be a valid number.',
-
-        'language_id.required' => 'The language field is required.',
         'language_id.integer' => 'The language must be a valid number.',
 
-        'image.required' => 'The image field is required.',
         'image.image' => 'The image must be an image.',
         'image.mimes' => 'The image must be a valid image type.',
         'image.max' => 'The image must be less than 2MB.',
