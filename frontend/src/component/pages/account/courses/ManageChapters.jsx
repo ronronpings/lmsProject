@@ -157,6 +157,46 @@ export const ManageChapters = ({ course }) => {
     }
   };
 
+  //deleteFunction on lesson
+  const deleteLesson = async (id) => {
+    // Confirmation gamit ang SweetAlert
+    const swalAlert = await Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, delete it!',
+    });
+
+    if (swalAlert.isConfirmed) {
+      try {
+        const res = await fetch(`${apiUrl}lessons/${id}`, {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            Accept: 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        const result = await res.json();
+
+        if (!res.ok) {
+          toast.error(result.message);
+          return;
+        }
+
+        // Gagamitin ang reducer para tanggalin sa UI
+        setChapters({ type: 'UPDATE_CHAPTER', payload: result.data });
+        toast.success(result.message);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
   return (
     <>
       <div className="card shadow-lg border-0">
@@ -234,7 +274,10 @@ export const ManageChapters = ({ course }) => {
                                     >
                                       <BsPencilSquare />
                                     </Link>
-                                    <Link className="ms-2 text-danger">
+                                    <Link
+                                      onClick={() => deleteLesson(lesson.id)}
+                                      className="ms-2 text-danger"
+                                    >
                                       <FaTrashAlt />
                                     </Link>
                                   </div>

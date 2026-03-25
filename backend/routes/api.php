@@ -4,6 +4,8 @@ use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\CourseController;
 use App\Http\Controllers\front\OutcomeController;
 use App\Http\Controllers\front\RequirementController;
+use App\Http\Controllers\front\ChapterController;
+use App\Http\Controllers\front\LessonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,7 +39,19 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('/requirements/{id}', [RequirementController::class, 'destroy']);
     Route::post('/sort-requirements', [RequirementController::class, 'sortRequirements']);
 
+    //chapters
+    Route::get('/chapters', [ChapterController::class, 'index']);
+    Route::post('/chapters', [ChapterController::class, 'store']);
+    Route::put('/chapters/{id}', [ChapterController::class, 'update']);
+    Route::delete('/chapters/{id}', [ChapterController::class, 'destroy']);
+    Route::post('/sort-chapters', [ChapterController::class, 'sortChapters']);
 
+    //Lesson
+    Route::post('/lessons', [LessonController::class, 'store']);
+    Route::put('/lessons/{id}', [LessonController::class, 'update']);
+    Route::delete('/lessons/{id}', [LessonController::class, 'destroy']);
+    Route::get('/lessons/{id}', [LessonController::class, 'show']);
+    Route::post('/save-lesson-video/{id}', [LessonController::class, 'saveLessonVideo']);
 
 });
    

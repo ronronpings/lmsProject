@@ -7,12 +7,23 @@ use Illuminate\Database\Eloquent\Model;
 class Lesson extends Model
 {
     //
+     protected $appends = ['video_url'];
+
+    public function getVideoUrlAttribute(){
+        if($this->video == ""){
+            return "";
+        }
+        return asset('uploads/course/videos/'.$this->video);
+    }
+
+
+
+
     protected $fillable = [
         'title',
         'course_id',
         'chapter_id',
-        'video_url',
-        'video_type',
+        'video',
         'duration',
         'status',
         'sort_order',

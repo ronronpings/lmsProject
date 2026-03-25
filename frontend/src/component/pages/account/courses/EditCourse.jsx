@@ -57,16 +57,16 @@ export const EditCourse = () => {
           }
           // console.log(result);
           //SUCCESS: add course data state para sa pag update ng course cover image
-          setCourse(result.data);
+          setCourse(result.data || {});
           //reset para ipakita yung current data on field form
           reset({
-            title: result.data.title,
+            title: result?.data?.title,
             category_id: String(result?.data?.category_id ?? ''),
             level_id: String(result?.data?.level_id ?? ''),
             language_id: String(result?.data?.language_id ?? ''),
-            description: result.data.description,
-            price: result.data.price,
-            cross_price: result.data.cross_price,
+            description: result?.data?.description,
+            price: result?.data?.price,
+            cross_price: result?.data?.cross_price,
           });
         } catch (error) {
           console.log(error);
@@ -345,7 +345,7 @@ export const EditCourse = () => {
                     <ManageRequirements />
                   </div>
                   <div className="mt-3">
-                    {course.id && (
+                    {course?.id && (
                       <EditCover course={course} setCourse={setCourse} />
                     )}
                   </div>

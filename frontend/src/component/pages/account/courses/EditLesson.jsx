@@ -1,12 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Layout } from '../../../common/Layout';
 import { UserSidebar } from '../../../common/UserSidebar';
 import { Link, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { apiUrl, token } from '../../../common/Config';
-import toast from 'react-hot-toast';
 
-export const EditLesson = () => {
+import JoditEditor from 'jodit-react';
+import toast from 'react-hot-toast';
+import { LessonVideo } from './LessonVideo';
+
+export const EditLesson = ({ placeholder }) => {
   const {
     register,
     handleSubmit,
@@ -14,10 +17,57 @@ export const EditLesson = () => {
     reset,
   } = useForm();
   const [chapters, setChapters] = useState([]);
+  const [lesson, setLesson] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  //for the loading state on edit lesson page JODIT EDITOR
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const params = useParams();
+  //for the jodit editor on description
+  const editor = useRef(null);
+  const [content, setContent] = useState('');
 
-  const onSubmit = async () => {};
+  const config = useMemo(
+    () => ({
+      readonly: false, // all options from https://xdsoft.net/jodit/docs/,
+      placeholder: placeholder || 'Start typings...',
+    }),
+    [placeholder]
+  );
+
+  const onSubmit = async (data) => {
+    try {
+      setLoading(true);
+      const formData = {
+        ...data,
+        description: content,
+        course_id: params.courseId,
+      };
+
+      const res = await fetch(`${apiUrl}lessons/${params.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        toast.success(result.message);
+      } else {
+        toast.error('Error updating lesson');
+        console.log(result.message);
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   //get course chapters that have lessons on api endpoint
   useEffect(() => {
@@ -32,14 +82,37 @@ export const EditLesson = () => {
     })
       .then((res) => res.json())
       .then((result) => {
-        // if (!result.ok) {
-        //   toast.error(result.message);
-        //   console.log(result.message);
-        //   return;
-        // }
-        setChapters(result.data);
+        if (result.data) {
+          setChapters(result.data);
+        }
       });
-  }, []);
+
+    fetch(`${apiUrl}lessons/${params.id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //add token for the authorization
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((result) => {
+        if (result.data) {
+          setLesson(result.data);
+          reset({
+            title: result.data.title,
+            chapter_id: result.data.chapter_id,
+            duration: result.data.duration,
+            status: result.data.status,
+            is_free_preview:
+              result.data.is_free_preview === 'yes' ? true : false,
+          });
+          setContent(result.data.description || '');
+          setIsLoaded(true);
+        }
+      });
+  }, [params.courseId, params.id]);
   return (
     <>
       <Layout>
@@ -58,7 +131,13 @@ export const EditLesson = () => {
             <div className="row">
               <div className="col-md-12 mt-5 mb-3">
                 <div className="d-flex justify-content-between">
-                  <h2 className="h4 mb-0 pb-0">Basic Information</h2>
+                  <h2 className="h4 mb-0 pb-0">Edit Lesson</h2>
+                  <Link
+                    className="btn btn-primary"
+                    to={`/account/courses/edit/${params.courseId}`}
+                  >
+                    Back
+                  </Link>
                 </div>
               </div>
               <div className="col-lg-3 account-sidebar">
@@ -112,9 +191,91 @@ export const EditLesson = () => {
                               </p>
                             )}
                           </div>
+                          <div className="mb-3">
+                            <label htmlFor="duration">
+                              Duration (in minutes)
+                            </label>
+                            <input
+                              type="number"
+                              className="form-control"
+                              id="duration"
+                              {...register('duration', {
+                                required: 'Duration is required',
+                              })}
+                            />
+                            {errors.duration && (
+                              <p className="text-danger">
+                                {errors.duration.message}
+                              </p>
+                            )}
+                          </div>
+                          <div className="mb-3">
+                            <label htmlFor="description">Description</label>
+
+                            {isLoaded ? (
+                              <JoditEditor
+                                ref={editor}
+                                value={content}
+                                config={config}
+                                onBlur={(newContent) => setContent(newContent)}
+                              />
+                            ) : (
+                              <p>Loading Editor...</p>
+                            )}
+                          </div>
+                          <div className="mb-3">
+                            <label htmlFor="status">Status</label>
+                            <select
+                              name="status"
+                              id="status"
+                              className="form-select"
+                              {...register('status', {
+                                required: 'Status is required',
+                              })}
+                            >
+                              <option value="">Select Status</option>
+                              <option value="1">Active</option>
+                              <option value="0">Block</option>
+                            </select>
+                            {errors.status && (
+                              <p className="text-danger">
+                                {errors.status.message}
+                              </p>
+                            )}
+                          </div>
+                          {/* //checkbox */}
+                          <div className="d-flex">
+                            <input
+                              type="checkbox"
+                              name="is_free_preview"
+                              value="1"
+                              id="freeLesson"
+                              className="form-check-input"
+                              {...register('is_free_preview')}
+                            />
+                            <label className="ms-2" htmlFor="freeLesson">
+                              Free Lesson
+                            </label>
+                          </div>
+
+                          {/* <button
+                            type="submit"
+                            className="btn btn-primary mt-4"
+                          >
+                            Update Lesson
+                          </button> */}
+                          <button
+                            disabled={loading}
+                            className="btn btn-primary mt-4"
+                          >
+                            {loading == false ? 'Update' : 'Please Wait...'}
+                          </button>
                         </div>
                       </div>
                     </form>
+                  </div>
+                  <div className="col-md-4">
+                    <LessonVideo lesson={lesson} />
                   </div>
                 </div>
               </div>
