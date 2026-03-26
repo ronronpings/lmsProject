@@ -12,6 +12,8 @@ import { CreateLesson } from './CreateLesson';
 import { FaPlus } from 'react-icons/fa';
 import { BsPencilSquare } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
+import { LessonSort } from './LessonSort';
+import { SortChapters } from './SortChapters';
 
 export const ManageChapters = ({ course }) => {
   const [loading, setLoading] = useState(false);
@@ -33,6 +35,25 @@ export const ManageChapters = ({ course }) => {
   const handleCloseLessonModal = () => setShowLessonModal(false);
   const handleShowLessonModal = () => {
     setShowLessonModal(true);
+  };
+
+  //sorting modal
+  const [activeChapterId, setActiveChapterId] = useState(null);
+  const [lessonSortData, setLessonSortData] = useState([]);
+  const [showLessonSort, setShowLessonSort] = useState(false);
+  const handleCloseLessonSort = () => setShowLessonSort(false);
+  const handleShowLessonSort = (lessons, chapterId) => {
+    setLessonSortData(lessons);
+    setActiveChapterId(chapterId);
+    setShowLessonSort(true);
+  };
+
+  //sorting chapters
+  const [showChapterSortModal, setShowChapterSortModal] = useState(false);
+  const handleCloseChapterSortModal = () => setShowChapterSortModal(false);
+  const handleShowChapterSortModal = (chapters) => {
+    // setChapterSortData(chapters);
+    setShowChapterSortModal(true);
   };
 
   const chapterReducer = (state, action) => {
@@ -208,6 +229,10 @@ export const ManageChapters = ({ course }) => {
                 <FaPlus size={12} />
                 <strong>Add Lesson</strong>
               </Link>
+              <Link onClick={() => handleShowChapterSortModal()}>
+                <FaPlus size={12} />
+                <strong> Reorder Chapters</strong>
+              </Link>
             </div>
           </div>
           <form className="mb-5" onSubmit={handleSubmit(onSubmit)}>
@@ -240,9 +265,16 @@ export const ManageChapters = ({ course }) => {
                       <div className="col-md-12">
                         <div className="d-flex justify-content-between mb-2 mt-4">
                           <h5 className="h5">Lessons</h5>
-                          <a className="h6" href="#" data-discover="true">
+                          <Link
+                            className="h6"
+                            //pass chapter lesson on () handleShowLessonSort
+                            onClick={() =>
+                              handleShowLessonSort(chapter.lessons, chapter.id)
+                            }
+                            data-discover="true"
+                          >
                             <strong>Reorder Lessons</strong>
-                          </a>
+                          </Link>
                         </div>
                       </div>
                       <div className="col-md-12">
@@ -324,6 +356,22 @@ export const ManageChapters = ({ course }) => {
         showLessonModal={showLessonModal}
         handleCloseLessonModal={handleCloseLessonModal}
         course={course}
+      />
+
+      <LessonSort
+        showLessonSort={showLessonSort}
+        handleCloseLessonSort={handleCloseLessonSort}
+        lessonSortData={lessonSortData}
+        setChapters={setChapters}
+        chapterId={activeChapterId}
+      />
+
+      <SortChapters
+        showChapterSortModal={showChapterSortModal}
+        handleCloseChapterSortModal={handleCloseChapterSortModal}
+        setChapters={setChapters}
+        course={course}
+        chapters={chapters}
       />
     </>
   );

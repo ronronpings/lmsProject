@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\File;
 class LessonController extends Controller
 {
     
+    public function index(Request $request){
+      
+    }
+
     public function store(LessonStoreRequest $request){
         $data = $request->validated();
         $data['sort_order'] = 1000;
@@ -88,4 +92,51 @@ class LessonController extends Controller
         ],200);
 
     }
+
+   public function sortLessons(Request $request) {
+    $chapterId = $request->chapter_id;
+    
+    // Safety check: ensure 'text' is an array
+    if (!is_array($request->text)) {
+        return response()->json(['message' => 'Invalid data'], 400);
+    }
+
+    foreach($request->text as $key => $value){
+        // Using update directly is slightly more efficient for bulk operations
+        Lesson::where('id', $value['id'])->update(['sort_order' => $key]);
+    }
+
+    // Load the chapter with reordered lessons to update the frontend state
+    $chapter = Chapter::where('id', $chapterId)->with('lessons')->first();
+    
+    return response()->json([
+        'status' => 200,
+        'message' => 'Order updated successfully',
+        'data' => $chapter
+    ], 200);
+}
+public function sortChapters(Request $request) {
+    $courseId = $request->course_id; // Changed to course_id
+    
+    if (!is_array($request->text)) {
+        return response()->json(['message' => 'Invalid data'], 400);
+    }
+
+    foreach($request->text as $key => $value){
+        Chapter::where('id', $value['id'])->update(['sort_order' => $key]);
+    }
+
+
+    $chapters = Chapter::where('course_id', $courseId)
+        ->with('lessons')
+        ->orderBy('sort_order', 'asc')
+        ->get();
+    
+    return response()->json([
+        'status' => 200,
+        'message' => 'Chapters reordered successfully',
+        'data' => $chapters
+    ], 200);
+}
+
 }

@@ -17,6 +17,6 @@ class Chapter extends Model
     //add this function to get the lessons
     public function lessons()
     {
-        return $this->hasMany(Lesson::class);
+        return $this->hasMany(Lesson::class)->orderBy('sort_order', 'asc');
     }
 }
