@@ -116,4 +116,19 @@ class CourseController extends Controller
         ],200);
 
     }
+
+    //publish course
+    public function publishCoursechangeStatus(Request $request, $id){
+        $course = Course::findOrFail($id);
+        $course->status = $request->status;
+        $course->save();
+
+        $message = ($course->status == 1) ?'Course published successfully':'Course unpublished successfully';
+
+        return response()->json([
+            'status' => 200,
+            'message' => $message,
+            'data' => $course->fresh()
+        ],200);
+    }
 }

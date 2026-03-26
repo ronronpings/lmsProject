@@ -154,6 +154,34 @@ export const EditCourse = () => {
       console.log(error);
     }
   };
+
+  //change Status to Publish and unpublish
+  const changeStatus = async (course) => {
+    const status = course.status == 1 ? 0 : 1;
+    const res = await fetch(`${apiUrl}publish-course/${course.id}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        //add token for the authorization
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+    const result = await res.json();
+    if (!res.ok) {
+      toast.error(result.message);
+      return;
+    }
+    if (result.data) {
+      //update the course data
+      setCourse(result.data);
+    }
+    if (result.message) {
+      toast.success(result.message);
+    }
+  };
+
   useEffect(() => {
     retriveData();
   }, []);
@@ -175,6 +203,14 @@ export const EditCourse = () => {
             <div className="col-md-12 mt-5 mb-3">
               <div className="d-flex justify-content-between">
                 <h2 className="h4 mb-0 pb-0">Edit Course</h2>
+                <div>
+                  <button
+                    onClick={() => changeStatus(course)}
+                    className={`btn ${course.status == 1 ? 'btn-warning' : 'btn-primary'}`}
+                  >
+                    {course.status == 1 ? 'Unpublish Course' : 'Publish Course'}
+                  </button>
+                </div>
               </div>
             </div>
             <div className="col-lg-3 account-sidebar">

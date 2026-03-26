@@ -14,6 +14,7 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import { LessonSort } from './LessonSort';
 import { SortChapters } from './SortChapters';
+import { RiDragMove2Fill } from 'react-icons/ri';
 
 export const ManageChapters = ({ course }) => {
   const [loading, setLoading] = useState(false);
@@ -222,15 +223,21 @@ export const ManageChapters = ({ course }) => {
     <>
       <div className="card shadow-lg border-0">
         <div className="card-body p-4">
-          <div className="d-flex">
-            <div className="d-flex justify-content-between w-100">
-              <h4 className="h5 mb-3">Manage Chapters</h4>
-              <Link onClick={() => handleShowLessonModal()}>
-                <FaPlus size={12} />
+          <div className="d-flex justify-content-between align-items-center w-100 mb-3">
+            <h4 className="h5 mb-0">Manage Chapters</h4>
+            <div className="d-flex gap-3">
+              <Link
+                onClick={() => handleShowLessonModal()}
+                className="text-decoration-none"
+              >
+                <FaPlus size={12} className="me-1" />
                 <strong>Add Lesson</strong>
               </Link>
-              <Link onClick={() => handleShowChapterSortModal()}>
-                <FaPlus size={12} />
+              <Link
+                onClick={() => handleShowChapterSortModal()}
+                className="text-decoration-none text-dark"
+              >
+                <RiDragMove2Fill size={18} className="me-1" />
                 <strong> Reorder Chapters</strong>
               </Link>
             </div>
