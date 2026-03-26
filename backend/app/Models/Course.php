@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Chapter;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Levels;
 
 class Course extends Model
 {
@@ -36,6 +37,10 @@ class Course extends Model
     //set relationship to the chapter model para ma view
     public function chapters(){
         return $this->hasMany(Chapter::class);
+    }
+
+    public function level(){
+        return $this->belongsTo(Levels::class);
     }
     
 

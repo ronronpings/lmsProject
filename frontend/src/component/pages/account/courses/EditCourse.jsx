@@ -210,6 +210,12 @@ export const EditCourse = () => {
                   >
                     {course.status == 1 ? 'Unpublish Course' : 'Publish Course'}
                   </button>
+                  <Link
+                    to={`/account/my-courses`}
+                    className="btn btn-light ms-2"
+                  >
+                    Back
+                  </Link>
                 </div>
               </div>
             </div>

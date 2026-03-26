@@ -28,10 +28,19 @@ function App() {
           <Route path="/detail" element={<Detail />} />
           <Route path="/account/login" element={<Login />} />
           <Route path="/account/register" element={<Register />} />
-          <Route path="/account/my-courses" element={<MyCourses />} />
+
           <Route path="/account/courses-enrolled" element={<MyLearning />} />
           <Route path="/account/watch-courses" element={<WatchCourse />} />
           <Route path="/account/change-password" element={<ChangePassword />} />
+
+          <Route
+            path="/account/my-courses"
+            element={
+              <RequireAuth>
+                <MyCourses />
+              </RequireAuth>
+            }
+          />
 
           <Route
             path="/account/dashboard"

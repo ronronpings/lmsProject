@@ -25,6 +25,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //course image
     Route::post('/save-course-image/{id}', [CourseController::class, 'saveCourseImage']);
     Route::post('/publish-course/{id}', [CourseController::class, 'publishCoursechangeStatus']);
+    //delete course with image and videos relationship with other modal/table
+    Route::delete('/delete-course/{id}', [CourseController::class, 'destroy']);
 
     
     //outcomes
@@ -56,6 +58,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('/save-lesson-video/{id}', [LessonController::class, 'saveLessonVideo']);
     Route::post('/sort-lessons', [LessonController::class,'sortLessons']);
     Route::post('/sort-chapters', [LessonController::class,'sortChapters']);
+
+    //Get Courses of the user
+    Route::get('/my-courses', [AccountController::class, 'myCourses']);
 
 });
    

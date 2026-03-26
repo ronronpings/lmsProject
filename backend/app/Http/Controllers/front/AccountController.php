@@ -8,6 +8,7 @@ use Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests\Account\LoginRequest;
 use App\Http\Requests\Account\RegisterRequest;
+use App\Models\Course;
 use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller
@@ -48,5 +49,15 @@ class AccountController extends Controller
         'user' => $user,
         'access_token' => $token,
     ],200);
+    }
+
+    public function myCourses(Request $request){
+        $courses = Course::where('user_id', $request->user()->id)
+        ->with('level')
+        ->get();
+        return response()->json([
+            'status' => 200,
+            'data' => $courses
+        ],200);
     }
 }

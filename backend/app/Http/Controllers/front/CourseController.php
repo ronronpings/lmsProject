@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 
 use App\Http\Requests\Account\CourseStoreRequest;
 use App\Models\Category;
+use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Language;
+use App\Models\Lesson;
 use App\Models\Levels;
 use Auth;
 use Illuminate\Http\Request;
@@ -77,6 +79,7 @@ class CourseController extends Controller
          'data'=> $course->fresh()
         ],200);
     }
+    //upload Image
     public function saveCourseImage(Request $request, $id ){
         $course = Course::findOrFail($id);
         $request->validate([
@@ -117,7 +120,7 @@ class CourseController extends Controller
 
     }
 
-    //publish course
+    //publish course change Status
     public function publishCoursechangeStatus(Request $request, $id){
         $course = Course::findOrFail($id);
         $course->status = $request->status;
@@ -130,5 +133,41 @@ class CourseController extends Controller
             'message' => $message,
             'data' => $course->fresh()
         ],200);
+    }
+
+    public function destroy($id, Request $request){
+  
+      $course = Course::with('chapters.lessons')
+        ->where('id', $id)
+        ->where('user_id', $request->user()->id)
+        ->firstOrFail();
+
+        foreach ($course->chapters as $chapter) {
+            foreach ($chapter->lessons as $lesson) {
+                if (!empty($lesson->video)) {
+                    $videoPath = public_path('uploads/course/videos/' . $lesson->video);
+                    if (File::exists($videoPath)) {
+                        File::delete($videoPath);
+                    }
+                }
+            }
+        }
+
+        if (!empty($course->image)) {
+            $small = public_path('uploads/course/small/' . $course->image);
+            $full  = public_path('uploads/course/' . $course->image);
+
+            if (File::exists($small)) File::delete($small);
+            if (File::exists($full)) File::delete($full);
+        }
+
+        $deletedId = $course->id;
+        $course->delete();
+
+        return response()->json([
+            'status' => 200,
+            'message' => 'Course deleted successfully',
+            'data' => ['id' => $deletedId],
+        ], 200);
     }
 }
