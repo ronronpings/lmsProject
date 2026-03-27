@@ -1,39 +1,42 @@
-import React, { useContext } from "react";
-import { useForm } from "react-hook-form";
-import { Link, useNavigate } from 'react-router-dom'
-import { apiUrl } from "../common/Config";
-import  toast  from "react-hot-toast";
-import { AuthContext } from "../Context/Auth";
+import React, { useContext } from 'react';
+import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { apiUrl } from '../common/Config';
+import toast from 'react-hot-toast';
+import { AuthContext } from '../Context/Auth';
+import Logo from '../../assets/images/login.png';
 
-export const Login = ()=> {
-
-  const {login} = useContext(AuthContext);
+export const Login = () => {
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
   const {
-    handleSubmit, register, formState: {errors}, setError
-  } = useForm()
+    handleSubmit,
+    register,
+    formState: { errors },
+    setError,
+  } = useForm();
   const handleLogin = async (data) => {
     // console.log('form data:', data);
-  // return;
+    // return;
     try {
       const res = await fetch(`${apiUrl}login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
+          Accept: 'application/json',
         },
         body: JSON.stringify(data),
       });
 
       const result = await res.json();
       //import toast
-    
+
       if (!res.ok) {
         // Laravel validation errors example: { errors: { email: ["..."] } }
         if (result?.errors) {
           Object.keys(result.errors).forEach((field) => {
             setError(field, {
-              type: "server",
+              type: 'server',
               message: result.errors[field][0],
             });
           });
@@ -43,74 +46,53 @@ export const Login = ()=> {
         return; // stop, do not navigate
       }
       const userInfo = {
-         name: result?.user?.name,
-         id: result?.user?.id,
-         token:result?.access_token,
-        }  
-      
-      localStorage.setItem('userInfoLms',JSON.stringify(userInfo));
+        name: result?.user?.name,
+        id: result?.user?.id,
+        token: result?.access_token,
+      };
+
+      localStorage.setItem('userInfoLms', JSON.stringify(userInfo));
       login(userInfo);
       navigate('/account/dashboard');
     } catch (error) {
       console.error(error);
     }
   };
-   return(
-     <section className="lms-login-page">
-        <div className="lms-login-left">
-          <div className="lms-login-brand">
-            <p className="lms-login-logo">Ronsdemy</p>
-            <h1>Learning University</h1>
-          </div>
+  return (
+    <section className="login-page">
+      <div className="login-left">
+        <div className="brand">
+          <img src={Logo} alt="Ronsdemy" />
         </div>
+      </div>
 
-        <div className="lms-login-right">
-          <div className="lms-login-card">
-            <h2>Login into your account</h2>
+      <div className="login-right">
+        <div className="login-card">
+          <h2>Welcome Back</h2>
+          <p className="subtitle">Log in to continue your learning journey</p>
 
-            <form className="lms-login-form" onSubmit={handleSubmit(handleLogin)}>
-              <div className="lms-field-group">
-                <label htmlFor="email">Email *</label>
-                <input 
-               {
-                ...register('email', {
-                    required: "The email field is required.",
-                    pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address"
-                } 
-                })
-              }
-              className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-              id="email" htmlFor="email" type="email" placeholder="Email" />
-              {
-                errors.email && <p className="invalid-feedback">{errors.email.message}</p>
-              }
-              </div>
+          <form onSubmit={handleSubmit(handleLogin)}>
+            <div className="field">
+              <input {...register('email')} type="email" placeholder="Email" />
+              {errors.email && <span>{errors.email.message}</span>}
+            </div>
 
-              <div className="lms-field-group">
-                <label htmlFor="password">Password *</label>
-                <input
-               {
-                ...register('password', {
-                  required: "The password field is required."
-                })
-              }
-              
-              id="password" className={`form-control`} type="password" placeholder="Password" />
-              </div>
+            <div className="field">
+              <input
+                {...register('password')}
+                type="password"
+                placeholder="Password"
+              />
+            </div>
 
-              <div className="lms-login-actions">
-                <button type="submit">LOG IN</button>
-                <Link to="/account/change-password">I CAN'T ACCESS MY ACCOUNT</Link>
-              </div>
+            <button className="btn-login">Continue</button>
 
-              <p className="lms-login-register-link">
-                Don&apos;t have an account? <Link to="/account/register">Create one</Link>
-              </p>
-            </form>
-          </div>
+            <p className="signup">
+              Don’t have an account? <Link to="/account/register">Sign up</Link>
+            </p>
+          </form>
         </div>
-     </section>
-   )
-}
+      </div>
+    </section>
+  );
+};
