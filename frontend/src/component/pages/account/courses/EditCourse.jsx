@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Layout } from '../../../common/Layout';
 import { UserSidebar } from '../../../common/UserSidebar';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { apiUrl, token } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import { ManageOutcome } from './ManageOutcome';
 import { ManageRequirements } from './ManageRequirements';
 import { EditCover } from './EditCover';
 import { ManageChapters } from './ManageChapters';
+import JoditEditor from 'jodit-react';
 
 export const EditCourse = () => {
   const params = useParams();
@@ -23,6 +24,7 @@ export const EditCourse = () => {
     register,
     formState: { errors },
     reset,
+    control,
     setError,
   } = useForm(
     //kunin yung mg data para automatic ng meron
@@ -68,16 +70,23 @@ export const EditCourse = () => {
             price: result?.data?.price,
             cross_price: result?.data?.cross_price,
           });
+          setIsLoaded(true);
         } catch (error) {
           console.log(error);
         }
       },
     }
   );
+
+  const editor = useRef([null]);
+
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [levels, setLevels] = useState([]);
   const [languages, setLanguages] = useState([]);
+
+  //for the loading state on edit lesson page JODIT EDITOR
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const onSubmit = async (data) => {
     setLoading(true);
@@ -328,13 +337,36 @@ export const EditCourse = () => {
                           <label className="form-label" htmlFor="description">
                             Description
                           </label>
-                          <textarea
-                            id="description"
-                            rows={5}
-                            placeholder="Description"
-                            className="form-control"
-                            {...register('description', {})}
-                          ></textarea>
+                          {/* Wrap JoditEditor in a Controller to sync with react-hook-form */}
+                          {isLoaded ? (
+                            <Controller
+                              name="description"
+                              control={control}
+                              render={({ field }) => (
+                                <JoditEditor
+                                  ref={editor}
+                                  value={field.value}
+                                  tabIndex={1}
+                                  onBlur={(newContent) =>
+                                    field.onChange(newContent)
+                                  }
+                                  onChange={() => {}}
+                                />
+                              )}
+                            />
+                          ) : (
+                            <div className="py-5 text-center">
+                              <div
+                                className="spinner-border text-primary"
+                                role="status"
+                              >
+                                <span className="visually-hidden">
+                                  Loading Editor...
+                                </span>
+                              </div>
+                              <p className="mt-2">Loading Editor...</p>
+                            </div>
+                          )}
                         </div>
 
                         <h4 className="h5 border-bottom pb-3 mb-3">Price</h4>

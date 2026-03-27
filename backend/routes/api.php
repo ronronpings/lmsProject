@@ -5,6 +5,7 @@ use App\Http\Controllers\front\CourseController;
 use App\Http\Controllers\front\OutcomeController;
 use App\Http\Controllers\front\RequirementController;
 use App\Http\Controllers\front\ChapterController;
+use App\Http\Controllers\front\HomeController;
 use App\Http\Controllers\front\LessonController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -63,4 +64,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/my-courses', [AccountController::class, 'myCourses']);
 
 });
+    //fetch categories
+    Route::get('/categories', [HomeController::class, 'fetchCategories']);
+    Route::get('/all-courses', [HomeController::class, 'fetchAllCourses']);
+    Route::get('/fetch-courses', [HomeController::class, 'courses']);
+    Route::get('/levels', [HomeController::class, 'fetchLevels']);
+    Route::get('/languages', [HomeController::class, 'fetchLanguages']);
+
    

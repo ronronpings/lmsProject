@@ -28,6 +28,7 @@ class CourseController extends Controller
     $data = $request->validated();
        
     $data['status'] = 0;
+    $data['is_featured'] = 'yes';
     $data['user_id'] = Auth::id();
 
     $course = Course::create($data);

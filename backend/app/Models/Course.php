@@ -42,6 +42,12 @@ class Course extends Model
     public function level(){
         return $this->belongsTo(Levels::class);
     }
-    
 
+    public function language(){
+        return $this->belongsTo(Language::class);
+    }
+
+    public function category(){
+        return $this->belongsTo(Category::class);
+    }
 }
