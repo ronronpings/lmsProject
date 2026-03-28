@@ -60,7 +60,9 @@ class HomeController extends Controller
     }
 
     public function courses(Request $request){
-        $courses = Course::where('status', 1)->with(['level', 'language', 'category'])->orderBy('created_at', 'desc');
+        $courses = Course::where('status', 1)
+            ->with(['level', 'language', 'category'])
+            ->orderBy('created_at', 'desc');
         //filter courses by keyword
         if($request->keyword){
             $courses = $courses->where('title', 'like', '%'.$request->keyword.'%');

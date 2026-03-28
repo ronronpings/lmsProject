@@ -22,6 +22,10 @@ export const Courses = () => {
 
   //search params
   const [searchParams, setSearchParams] = useSearchParams();
+  const [keyword, setKeyword] = useState(
+    () => searchParams.get('keyword') || ''
+  );
+  const [debouncedKeyword, setDebouncedKeyword] = useState(keyword);
 
   //category checked
   const [categoryChecked, setCategoryChecked] = useState(() => {
@@ -68,10 +72,14 @@ export const Courses = () => {
 
   //pass to backend
 
-  const fetchCourses = async () => {
+  const fetchCourses = async (signal) => {
     setCoursesLoading(true);
     let search = [];
     let params = '';
+
+    if (debouncedKeyword.trim() !== '') {
+      search.push(['keyword', debouncedKeyword.trim()]);
+    }
 
     if (categoryChecked.length > 0) {
       search.push(['category', categoryChecked]);
@@ -95,6 +103,7 @@ export const Courses = () => {
     try {
       const response = await fetch(`${apiUrl}fetch-courses?${params}`, {
         method: 'GET',
+        signal,
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
@@ -110,10 +119,15 @@ export const Courses = () => {
       console.log(data.data);
       setCourses(Array.isArray(data.data) ? data.data : []);
     } catch (error) {
+      if (error.name === 'AbortError') {
+        return;
+      }
       console.error('Error fetching courses:', error);
       setCourses([]);
     } finally {
-      setCoursesLoading(false);
+      if (!signal?.aborted) {
+        setCoursesLoading(false);
+      }
     }
   };
 
@@ -164,8 +178,25 @@ export const Courses = () => {
 
   //separate use effect for filters checked to avoid infinite loop
   useEffect(() => {
-    fetchCourses();
-  }, [categoryChecked, levelChecked, languageChecked]);
+    const controller = new AbortController();
+    fetchCourses(controller.signal);
+
+    return () => controller.abort();
+  }, [
+    debouncedKeyword,
+    categoryChecked,
+    levelChecked,
+    languageChecked,
+  ]);
+
+  //for search use effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedKeyword(keyword);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [keyword]);
 
   return (
     <>
@@ -189,7 +220,10 @@ export const Courses = () => {
                   type="text"
                   className="form-control"
                   placeholder="Search by keyword"
+                  value={keyword}
+                  onChange={(e) => setKeyword(e.target.value)}
                 />
+
                 <div className="pt-3">
                   <h3 className="h5 mb-2">Category</h3>
                   <ul>
