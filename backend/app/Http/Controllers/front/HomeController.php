@@ -12,6 +12,19 @@ use Illuminate\Http\Request;
 class HomeController extends Controller
 {
     //
+    public function fetchCourseFilters()
+    {
+        return response()->json([
+            'status' => true,
+            'message' => 'Course filters fetched successfully',
+            'data' => [
+                'categories' => Category::where('status', 1)->get(),
+                'levels' => Levels::where('status', 1)->get(),
+                'languages' => Language::where('status', 1)->get(),
+            ],
+        ]);
+    }
+
     public function fetchCategories()
     {
         $categories = Category::where('status', 1)->get();

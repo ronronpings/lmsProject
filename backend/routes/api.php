@@ -65,10 +65,11 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 });
     //fetch categories
-    Route::get('/categories', [HomeController::class, 'fetchCategories']);
+    Route::get('/course-filters', [HomeController::class, 'fetchCourseFilters']);
+    // Route::get('/categories', [HomeController::class, 'fetchCategories']);
     Route::get('/all-courses', [HomeController::class, 'fetchAllCourses']);
     Route::get('/fetch-courses', [HomeController::class, 'courses']);
-    Route::get('/levels', [HomeController::class, 'fetchLevels']);
-    Route::get('/languages', [HomeController::class, 'fetchLanguages']);
+    // Route::get('/levels', [HomeController::class, 'fetchLevels']);
+    // Route::get('/languages', [HomeController::class, 'fetchLanguages']);
 
    

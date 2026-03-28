@@ -5,24 +5,23 @@ import toast from 'react-hot-toast';
 export const FeaturedCategories = () => {
   const [categories, setCategories] = useState([]);
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
   const fetchCategories = async () => {
     try {
-      const response = await fetch(`${apiUrl}categories`);
+      const response = await fetch(`${apiUrl}course-filters`);
       const data = await response.json();
 
       if (!response.ok || !data.status) {
         toast.error(data.message);
         return;
       }
-      setCategories(data.data);
+      setCategories(data.data.categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   return (
     <>

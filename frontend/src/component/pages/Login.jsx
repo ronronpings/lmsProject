@@ -1,13 +1,15 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { apiUrl } from '../common/Config';
 import toast from 'react-hot-toast';
 import { AuthContext } from '../Context/Auth';
 import Logo from '../../assets/images/login.png';
+import { motion } from 'framer-motion';
 
 export const Login = () => {
   const { login } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -18,6 +20,7 @@ export const Login = () => {
   const handleLogin = async (data) => {
     // console.log('form data:', data);
     // return;
+    setLoading(true);
     try {
       const res = await fetch(`${apiUrl}login`, {
         method: 'POST',
@@ -56,17 +59,24 @@ export const Login = () => {
       navigate('/account/dashboard');
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
   return (
     <section className="login-page">
       <div className="login-left">
         <div className="brand">
-          <img src={Logo} alt="Ronsdemy" />
+          <img src={Logo} alt="" />
         </div>
       </div>
 
-      <div className="login-right">
+      <motion.div
+        className="login-right"
+        initial={{ x: 40, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
+      >
         <div className="login-card">
           <h2>Welcome Back</h2>
           <p className="subtitle">Log in to continue your learning journey</p>
@@ -85,14 +95,17 @@ export const Login = () => {
               />
             </div>
 
-            <button className="btn-login">Continue</button>
+            <button className="btn-login" disabled={loading}>
+              {' '}
+              {loading == false ? 'Continue' : 'Please Wait...'}
+            </button>
 
             <p className="signup">
               Don’t have an account? <Link to="/account/register">Sign up</Link>
             </p>
           </form>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

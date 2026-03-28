@@ -77,7 +77,7 @@ class CourseController extends Controller
 
         return response()->json([
          'message'=> 'Course updated successfully',
-         'data'=> $course->fresh()
+         'data'=> $course
         ],200);
     }
     //upload Image
@@ -116,7 +116,7 @@ class CourseController extends Controller
         return response()->json([
             'status' => 201,
             'message' => 'Image uploaded successfully',
-            'data' => $course->fresh()
+            'data' => $course
         ],200);
 
     }

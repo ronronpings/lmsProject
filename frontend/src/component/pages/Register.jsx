@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { apiUrl } from '../common/Config';
 import toast from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import Logo from '../../assets/images/login.png';
 
 export const Register = () => {
@@ -51,11 +52,16 @@ export const Register = () => {
     <section className="login-page">
       <div className="login-left">
         <div className="brand">
-          <img src={Logo} alt="Ronsdemy" />
+          <img src={Logo} alt="" />
         </div>
       </div>
 
-      <div className="login-right">
+      <motion.div
+        className="login-right"
+        initial={{ x: 40, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.7, ease: 'easeOut', delay: 0.15 }}
+      >
         <div className="login-card">
           <h2>Create your account</h2>
           <p className="subtitle">Sign up to start your learning journey</p>
@@ -105,14 +111,16 @@ export const Register = () => {
               {errors.password && <span>{errors.password.message}</span>}
             </div>
 
-            <button type="submit" className="btn-login">Create Account</button>
+            <button type="submit" className="btn-login">
+              Create Account
+            </button>
 
             <p className="signup">
               Already have an account? <Link to="/account/login">Log in</Link>
             </p>
           </form>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -46,7 +46,7 @@ class LessonController extends Controller
         $lesson->update($data);
         return response()->json([
             'message' => 'Lesson updated successfully.',
-            'data' => $lesson->fresh()
+            'data' => $lesson
         ], 200);
     }
       public function destroy($id) {

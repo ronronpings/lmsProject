@@ -117,63 +117,12 @@ export const Courses = () => {
     }
   };
 
-  const fetchCategories = async () => {
+  const fetchCourseFilters = async () => {
     setcategoryLoading(true);
-    try {
-      const response = await fetch(`${apiUrl}categories`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
-      const data = await response.json();
-
-      if (!response.ok || !data.status) {
-        console.error('Failed to fetch categories:', data.message);
-        setCategories([]);
-        return;
-      }
-
-      setCategories(Array.isArray(data.data) ? data.data : []);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
-      setCategories([]);
-    } finally {
-      setcategoryLoading(false);
-    }
-  };
-
-  const fetchLevels = async () => {
     setlevelLoading(true);
-    try {
-      const response = await fetch(`${apiUrl}levels`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-      });
-      const data = await response.json();
-
-      if (!response.ok || !data.status) {
-        console.error('Failed to fetch levels:', data.message);
-        setLevels([]);
-        return;
-      }
-      setLevels(Array.isArray(data.data) ? data.data : []);
-    } catch (error) {
-      console.error('Error fetching levels:', error);
-      setLevels([]);
-    } finally {
-      setlevelLoading(false);
-    }
-  };
-
-  const fetchLanguages = async () => {
     setlanguageLoading(true);
     try {
-      const response = await fetch(`${apiUrl}languages`, {
+      const response = await fetch(`${apiUrl}course-filters`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -183,24 +132,34 @@ export const Courses = () => {
       const data = await response.json();
 
       if (!response.ok || !data.status) {
-        console.error('Failed to fetch languages:', data.message);
+        console.error('Failed to fetch course filters:', data.message);
+        setCategories([]);
+        setLevels([]);
         setLanguages([]);
         return;
       }
-      setLanguages(Array.isArray(data.data) ? data.data : []);
+
+      setCategories(
+        Array.isArray(data.data?.categories) ? data.data.categories : []
+      );
+      setLevels(Array.isArray(data.data?.levels) ? data.data.levels : []);
+      setLanguages(
+        Array.isArray(data.data?.languages) ? data.data.languages : []
+      );
     } catch (error) {
-      console.error('Error fetching languages:', error);
+      console.error('Error fetching course filters:', error);
+      setCategories([]);
+      setLevels([]);
       setLanguages([]);
     } finally {
+      setcategoryLoading(false);
+      setlevelLoading(false);
       setlanguageLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCategories();
-    fetchLevels();
-    fetchLanguages();
-    fetchCourses();
+    fetchCourseFilters();
   }, []);
 
   //separate use effect for filters checked to avoid infinite loop
