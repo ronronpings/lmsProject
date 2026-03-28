@@ -1,4 +1,4 @@
-# LMS
+# LMS(PRISM)
 
 Learning Management System built with a decoupled Laravel API and React SPA frontend.
 
