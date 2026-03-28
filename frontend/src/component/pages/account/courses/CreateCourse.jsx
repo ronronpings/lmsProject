@@ -4,7 +4,7 @@ import { UserSidebar } from "../../../common/UserSidebar";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
-import { apiUrl, token } from "../../../common/Config";
+import { apiUrl, getToken } from "../../../common/Config";
 export const CreateCourse = () => {
   const {
     handleSubmit,
@@ -22,7 +22,7 @@ export const CreateCourse = () => {
           "Content-Type": "application/json",
           Accept: "application/json",
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(data),
       });

@@ -5,7 +5,7 @@ import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orien
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import { useParams } from 'react-router-dom';
 
@@ -38,7 +38,7 @@ export const EditCover = ({ course, setCourse }) => {
                 url: `save-course-image/${params.id}`,
                 method: 'POST',
                 headers: {
-                  Authorization: `Bearer ${token}`,
+                  Authorization: `Bearer ${getToken()}`,
                 },
                 onload: (response) => {
                   response = JSON.parse(response);

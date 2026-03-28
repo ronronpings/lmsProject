@@ -3,7 +3,7 @@ import { Layout } from '../../../common/Layout';
 import { UserSidebar } from '../../../common/UserSidebar';
 import { Link, useParams } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 
 import JoditEditor from 'jodit-react';
 import toast from 'react-hot-toast';
@@ -50,7 +50,7 @@ export const EditLesson = ({ placeholder }) => {
         headers: {
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(formData),
       });
@@ -77,7 +77,7 @@ export const EditLesson = ({ placeholder }) => {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         //add token for the authorization
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
       .then((res) => res.json())
@@ -93,7 +93,7 @@ export const EditLesson = ({ placeholder }) => {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         //add token for the authorization
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
       .then((res) => res.json())

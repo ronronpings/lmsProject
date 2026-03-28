@@ -3,7 +3,7 @@ import { Layout } from '../../common/Layout';
 import { Link } from 'react-router-dom';
 import { UserSidebar } from '../../common/UserSidebar';
 import { CourseEdit } from '../../common/CourseEdit';
-import { apiUrl, token } from '../../common/Config';
+import { apiUrl, getToken } from '../../common/Config';
 import toast from 'react-hot-toast';
 
 export const MyCourses = () => {
@@ -16,7 +16,7 @@ export const MyCourses = () => {
         'Content-Type': 'application/json',
         Accept: 'application/json',
         //add token for the authorization
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     });
     const result = await res.json();

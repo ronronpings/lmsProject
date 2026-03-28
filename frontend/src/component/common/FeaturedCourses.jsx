@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Course } from './Course';
-import { apiUrl, token } from './Config';
+import { apiUrl } from './Config';
 import toast from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 

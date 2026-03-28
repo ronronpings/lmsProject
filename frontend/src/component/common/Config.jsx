@@ -1,7 +1,17 @@
 export const apiUrl = import.meta.env.VITE_API_URL;
 
-//fetch token for the pages that have authorization
-const userInfo = localStorage.getItem('userInfoLms');
-export const token = userInfo ? JSON.parse(userInfo).token : null;
+export const getToken = () => {
+  const userInfo = localStorage.getItem('userInfoLms');
+
+  if (!userInfo) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(userInfo).token ?? null;
+  } catch (error) {
+    return null;
+  }
+};
 
 // console.log('API URL: ', apiUrl);

@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import Accordion from 'react-bootstrap/Accordion';
 import { UpdateChapter } from './UpdateChapter';
@@ -98,7 +98,7 @@ export const ManageChapters = ({ course }) => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(formData),
       });
@@ -159,7 +159,7 @@ export const ManageChapters = ({ course }) => {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 
@@ -199,7 +199,7 @@ export const ManageChapters = ({ course }) => {
           headers: {
             'Content-Type': 'application/json',
             Accept: 'application/json',
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
 

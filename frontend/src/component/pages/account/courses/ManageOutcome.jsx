@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 import { Link, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
@@ -50,7 +50,7 @@ export const ManageOutcome = () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify({ text: updatedOutcomes }),
       });
@@ -98,7 +98,7 @@ export const ManageOutcome = () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(formData),
       });
@@ -142,7 +142,7 @@ export const ManageOutcome = () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         //WALA NA TO
         // body: JSON.stringify(formData),
@@ -196,7 +196,7 @@ export const ManageOutcome = () => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
             //add token for the authorization
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
           //WALA NA TO
           // body: JSON.stringify(formData),

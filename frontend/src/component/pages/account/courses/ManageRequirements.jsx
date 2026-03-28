@@ -3,7 +3,7 @@ import { BsPencilSquare } from 'react-icons/bs';
 import { FaTrashAlt } from 'react-icons/fa';
 import { MdDragIndicator } from 'react-icons/md';
 import { Link, useParams } from 'react-router-dom';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 import toast from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import Swal from 'sweetalert2';
@@ -54,7 +54,7 @@ export const ManageRequirements = () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(formData),
       });
@@ -96,7 +96,7 @@ export const ManageRequirements = () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         //WALA NA TO
         // body: JSON.stringify(formData),
@@ -150,7 +150,7 @@ export const ManageRequirements = () => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
             //add token for the authorization
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
           //WALA NA TO
           // body: JSON.stringify(formData),
@@ -204,7 +204,7 @@ export const ManageRequirements = () => {
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify({ text: updatedRequirements }),
       });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { apiUrl, token } from './Config';
+import { apiUrl, getToken } from './Config';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 export const CourseEdit = ({ course }) => {
@@ -25,7 +25,7 @@ export const CourseEdit = ({ course }) => {
             'Content-Type': 'application/json',
             Accept: 'application/json',
             //add token for the authorization
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${getToken()}`,
           },
         });
         if (!res.ok) {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useForm } from 'react-hook-form';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 import toast from 'react-hot-toast';
 
 export const UpdateRequirements = ({
@@ -33,7 +33,7 @@ export const UpdateRequirements = ({
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify(data),
       });

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
-import { apiUrl, token } from '../../../common/Config';
+import { apiUrl, getToken } from '../../../common/Config';
 import toast from 'react-hot-toast';
 export const LessonSort = ({
   showLessonSort,
@@ -37,7 +37,7 @@ export const LessonSort = ({
           'Content-Type': 'application/json',
           Accept: 'application/json',
           //add token for the authorization
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${getToken()}`,
         },
         body: JSON.stringify({ text: updatedLessons, chapter_id: chapterId }),
       });
