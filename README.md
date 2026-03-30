@@ -110,7 +110,7 @@ Protected endpoints cover:
 Run MySQL through Docker:
 
 ```bash
-docker compose -f docker-compose.db.yml up -d
+docker compose up -d
 ```
 
 ### 2. Configure the backend

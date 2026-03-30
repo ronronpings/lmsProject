@@ -1,0 +1,52 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: lms-mysql
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-lms}
+      MYSQL_USER: ${MYSQL_USER:-lms_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-lms_pass}
+    volumes:
+      - lms_mysql_data:/var/lib/mysql
+    command: --default-authentication-plugin=mysql_native_password
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: lms-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/var/www
+    environment:
+      - DB_HOST=mysql
+      - DB_DATABASE=${MYSQL_DATABASE:-lms}
+      - DB_USERNAME=${MYSQL_USER:-lms_user}
+      - DB_PASSWORD=${MYSQL_PASSWORD:-lms_pass}
+    depends_on:
+      - mysql
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: lms-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000/api/
+    depends_on:
+      - backend
+
+volumes:
+  lms_mysql_data:
