@@ -26,57 +26,17 @@ export const EditCourse = () => {
     reset,
     control,
     setError,
-  } = useForm(
-    //kunin yung mg data para automatic ng meron
-    {
-      defaultValues: async () => {
-        try {
-          const res = await fetch(`${apiUrl}courses/${params.id}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              Accept: 'application/json',
-              //add token for the authorization
-              Authorization: `Bearer ${getToken()}`,
-            },
-          });
-
-          const result = await res.json();
-          if (!res.ok) {
-            // Laravel validation errors example: { errors: { email: ["..."] } }
-            if (result?.errors) {
-              Object.keys(result.errors).forEach((field) => {
-                setError(field, {
-                  type: 'server',
-                  message: result.errors[field][0],
-                });
-              });
-            }
-
-            //appear toast if invalid credentials comes from backend
-            toast.error(result.message);
-            return; // stop, do not navigate
-          }
-          // console.log(result);
-          //SUCCESS: add course data state para sa pag update ng course cover image
-          setCourse(result.data || {});
-          //reset para ipakita yung current data on field form
-          reset({
-            title: result?.data?.title,
-            category_id: String(result?.data?.category_id ?? ''),
-            level_id: String(result?.data?.level_id ?? ''),
-            language_id: String(result?.data?.language_id ?? ''),
-            description: result?.data?.description,
-            price: result?.data?.price,
-            cross_price: result?.data?.cross_price,
-          });
-          setIsLoaded(true);
-        } catch (error) {
-          console.log(error);
-        }
-      },
-    }
-  );
+  } = useForm({
+    defaultValues: {
+      title: '',
+      category_id: '',
+      level_id: '',
+      language_id: '',
+      description: '',
+      price: '',
+      cross_price: '',
+    },
+  });
 
   const editor = useRef([null]);
 
@@ -128,37 +88,74 @@ export const EditCourse = () => {
     }
   };
 
-  //Retrive Data from backend api
-  const retriveData = async () => {
+  const loadInitialData = async () => {
     try {
-      const res = await fetch(`${apiUrl}courses/meta-data`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-          //add token for the authorization
-          Authorization: `Bearer ${getToken()}`,
-        },
-      });
+      const headers = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        Authorization: `Bearer ${getToken()}`,
+      };
 
-      const result = await res.json();
-      if (!res.ok) {
-        // Laravel validation errors example: { errors: { email: ["..."] } }
-        if (result?.errors) {
-          Object.keys(result.errors).forEach((field) => {
+      const [courseRes, metaRes] = await Promise.all([
+        fetch(`${apiUrl}courses/${params.id}`, {
+          method: 'GET',
+          headers,
+        }),
+        fetch(`${apiUrl}courses/meta-data`, {
+          method: 'GET',
+          headers,
+        }),
+      ]);
+
+      const [courseResult, metaResult] = await Promise.all([
+        courseRes.json(),
+        metaRes.json(),
+      ]);
+
+      if (!courseRes.ok) {
+        if (courseResult?.errors) {
+          Object.keys(courseResult.errors).forEach((field) => {
             setError(field, {
               type: 'server',
-              message: result.errors[field][0],
+              message: courseResult.errors[field][0],
             });
           });
         }
-        //appear toast if invalid credentials comes from backend
-        toast.error(result.message);
-        return; // stop, do not navigate
+
+        toast.error(courseResult.message);
+        return;
       }
-      setCategories(result.categories);
-      setLevels(result.levels);
-      setLanguages(result.languages);
+
+      if (!metaRes.ok) {
+        if (metaResult?.errors) {
+          Object.keys(metaResult.errors).forEach((field) => {
+            setError(field, {
+              type: 'server',
+              message: metaResult.errors[field][0],
+            });
+          });
+        }
+
+        toast.error(metaResult.message);
+        return;
+      }
+
+      setCourse(courseResult.data || {});
+      setCategories(Array.isArray(metaResult.categories) ? metaResult.categories : []);
+      setLevels(Array.isArray(metaResult.levels) ? metaResult.levels : []);
+      setLanguages(Array.isArray(metaResult.languages) ? metaResult.languages : []);
+
+      reset({
+        title: courseResult?.data?.title ?? '',
+        category_id: String(courseResult?.data?.category_id ?? ''),
+        level_id: String(courseResult?.data?.level_id ?? ''),
+        language_id: String(courseResult?.data?.language_id ?? ''),
+        description: courseResult?.data?.description ?? '',
+        price: courseResult?.data?.price ?? '',
+        cross_price: courseResult?.data?.cross_price ?? '',
+      });
+
+      setIsLoaded(true);
     } catch (error) {
       console.log(error);
     }
@@ -192,8 +189,8 @@ export const EditCourse = () => {
   };
 
   useEffect(() => {
-    retriveData();
-  }, []);
+    loadInitialData();
+  }, [params.id]);
   return (
     <Layout>
       <section className="section-4">

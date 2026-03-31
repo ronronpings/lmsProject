@@ -12,7 +12,7 @@ use App\Http\Requests\Account\ChapterUpdateRequest;
 class ChapterController extends Controller
 {
     //
-     public function index(Request $request) {
+    public function index(Request $request) {
 
       //since sorting is already implemented, we can just get the chapters
       //and the sort_order will handle the order

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 export const Course = ({
   title,
   level,
@@ -6,8 +7,10 @@ export const Course = ({
   customClasses,
   image,
   price,
-  course,
+  id,
 }) => {
+  // console.log('Course props id:', id, typeof id);
+
   return (
     <>
       <div className={customClasses}>
@@ -83,9 +86,9 @@ export const Course = ({
             <div className="d-flex py-2 justify-content-between align-items-center">
               <div className="price">${price}</div>
               <div className="add-to-cart">
-                <a href="/detail" className="btn btn-primary">
+                <Link to={`/detail/${id}`} className="btn btn-primary">
                   Read More
-                </a>
+                </Link>
               </div>
             </div>
           </div>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\front\AccountController;
+use App\Http\Controllers\front\AiChatController;
 use App\Http\Controllers\front\CourseController;
 use App\Http\Controllers\front\OutcomeController;
 use App\Http\Controllers\front\RequirementController;
@@ -71,5 +72,9 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/fetch-courses', [HomeController::class, 'courses']);
     // Route::get('/levels', [HomeController::class, 'fetchLevels']);
     // Route::get('/languages', [HomeController::class, 'fetchLanguages']);
+    Route::get('/courses/{id}/details', [HomeController::class, 'fetchCourseDetails']);
+    Route::post('/ai/chat', [AiChatController::class, 'chat']);
+  
+    
 
    

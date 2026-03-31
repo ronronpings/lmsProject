@@ -68,6 +68,7 @@ export const FeaturedCourses = () => {
                   {courses.map((course) => (
                     <Course
                       key={course.id}
+                      id={course.id}
                       title={course.title}
                       level={course.level?.name}
                       enrolled={course.enrolled}

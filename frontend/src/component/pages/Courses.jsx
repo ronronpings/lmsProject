@@ -19,9 +19,12 @@ export const Courses = () => {
   const [categoryloading, setcategoryLoading] = useState(false);
   const [levelLoading, setlevelLoading] = useState(false);
   const [languageLoading, setlanguageLoading] = useState(false);
+  //sorting on filter new filter and old filter
 
   //search params
   const [searchParams, setSearchParams] = useSearchParams();
+  const [sort, setSort] = useState(() => searchParams.get('sort') || 'desc');
+
   const [keyword, setKeyword] = useState(
     () => searchParams.get('keyword') || ''
   );
@@ -76,6 +79,11 @@ export const Courses = () => {
     setCoursesLoading(true);
     let search = [];
     let params = '';
+
+    //sorting on filter
+    if (sort) {
+      search.push(['sort', sort]);
+    }
 
     if (debouncedKeyword.trim() !== '') {
       search.push(['keyword', debouncedKeyword.trim()]);
@@ -182,12 +190,7 @@ export const Courses = () => {
     fetchCourses(controller.signal);
 
     return () => controller.abort();
-  }, [
-    debouncedKeyword,
-    categoryChecked,
-    levelChecked,
-    languageChecked,
-  ]);
+  }, [debouncedKeyword, categoryChecked, levelChecked, languageChecked, sort]);
 
   //for search use effect
   useEffect(() => {
@@ -353,9 +356,13 @@ export const Courses = () => {
                   found
                 </div>
                 <div>
-                  <select name="" id="" className="form-select">
-                    <option value="0">Newset First</option>
-                    <option value="1">Oldest First</option>
+                  <select
+                    className="form-select"
+                    value={sort}
+                    onChange={(e) => setSort(e.target.value)}
+                  >
+                    <option value="desc">Newest First</option>
+                    <option value="asc">Oldest First</option>
                   </select>
                 </div>
               </div>
@@ -396,6 +403,7 @@ export const Courses = () => {
                           price={course.price}
                           image={course.course_small_image}
                           customClasses="col-lg-4 col-md-6"
+                          id={course.id}
                         />
                       ))
                     ) : (

@@ -39,6 +39,14 @@ class Course extends Model
         return $this->hasMany(Chapter::class);
     }
 
+    public function outcomes(){
+        return $this->hasMany(Outcome::class)->orderBy('sort_order', 'asc');
+    }
+
+    public function requirements(){
+        return $this->hasMany(Requirement::class)->orderBy('sort_order', 'asc');
+    }
+
     public function level(){
         return $this->belongsTo(Levels::class);
     }

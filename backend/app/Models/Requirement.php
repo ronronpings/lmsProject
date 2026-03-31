@@ -12,4 +12,8 @@ class Requirement extends Model
         'text',
         'sort_order',
     ];
+     public function course()
+    {
+        return $this->belongsTo(Course::class);
+    }
 }

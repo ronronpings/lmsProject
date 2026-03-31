@@ -4,9 +4,12 @@ namespace App\Http\Controllers\front;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Models\Chapter;
 use App\Models\Course;
 use App\Models\Language;
 use App\Models\Levels;
+use App\Models\Outcome;
+use App\Models\Requirement;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -103,5 +106,28 @@ class HomeController extends Controller
             'data' => $courses,
         ]);
     }
-     
+    public function fetchCourseOnDetails($id){
+        $course = Course::where('id', $id)->with(['level', 'language', 'category'])->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Course fetched successfully',
+            'data' => $course,
+        ]);
+    }
+    public function fetchCourseDetails($id){
+        $course = Course::with([
+            'level',
+            'language',
+            'category',
+            'outcomes',
+            'requirements',
+            'chapters.lessons',
+        ])->find($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Course details fetched successfully',
+            'data' => $course,
+        ]);
+    }
 }
