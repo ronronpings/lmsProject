@@ -4,6 +4,7 @@ use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\AiChatController;
 use App\Http\Controllers\front\CourseController;
 use App\Http\Controllers\front\OutcomeController;
+use App\Http\Controllers\front\PaymentController;
 use App\Http\Controllers\front\RequirementController;
 use App\Http\Controllers\front\ChapterController;
 use App\Http\Controllers\front\HomeController;
@@ -64,7 +65,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     //Get Courses of the user
     Route::get('/my-courses', [AccountController::class, 'myCourses']);
 
-});
+
+    //Stripe Payment 
+    Route::post('/payment/checkout', [PaymentController::class, 'createCheckoutSession']);
+    Route::post('/payment/verify', [PaymentController::class, 'verifyPayment']);
+
+    });
     //fetch categories
     Route::get('/course-filters', [HomeController::class, 'fetchCourseFilters']);
     // Route::get('/categories', [HomeController::class, 'fetchCategories']);

@@ -15,6 +15,7 @@ import { RequireAuth } from './component/common/RequireAuth';
 import { CreateCourse } from './component/pages/account/courses/CreateCourse';
 import { EditCourse } from './component/pages/account/courses/EditCourse';
 import { EditLesson } from './component/pages/account/courses/EditLesson';
+import { PaymentSuccess } from './component/pages/PaymentSuccess';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -32,6 +33,7 @@ function App() {
           <Route path="/account/courses-enrolled" element={<MyLearning />} />
           <Route path="/account/watch-courses" element={<WatchCourse />} />
           <Route path="/account/change-password" element={<ChangePassword />} />
+          <Route path="/payment/success" element={<PaymentSuccess />} />
 
           <Route
             path="/account/my-courses"

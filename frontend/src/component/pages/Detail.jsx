@@ -9,8 +9,8 @@ import {
   Form,
   Modal,
 } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
-import { apiUrl } from '../common/Config';
+import { useParams, useNavigate } from 'react-router-dom';
+import { apiUrl, getToken } from '../common/Config';
 import toast from 'react-hot-toast';
 
 //transcribe
@@ -52,6 +52,10 @@ export const Detail = () => {
 
   const [showPreviewModal, setShowPreviewModal] = useState(false);
   const [previewLesson, setPreviewLesson] = useState(null);
+
+  //this is for the paymeny method
+  const navigate = useNavigate();
+  const [buyLoading, setBuyLoading] = useState(false);
 
   const handleClosePreview = () => {
     setShowPreviewModal(false);
@@ -214,6 +218,72 @@ export const Detail = () => {
     scrollToBottom();
   }, [messages, chatLoading]);
 
+  //Total Lectures , Chapters and Minutes
+  const totalLectures = courseChapters.reduce(
+    (total, chapter) => total + (chapter.lessons?.length || 0),
+    0
+  );
+
+  const totalMinutes = courseChapters.reduce((acc, chapter) => {
+    const chapterDuration =
+      chapter.lessons?.reduce((lessonAcc, lesson) => {
+        return lessonAcc + (parseInt(lesson.duration) || 0);
+      }, 0) || 0;
+    return acc + chapterDuration;
+  }, 0);
+
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  //Auto Scroll bottom when readmore click on Course.jsx
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
+  //payment method handle buy
+  const handleBuyNow = async () => {
+    console.log('testing');
+    const token = getToken();
+
+    // If not logged in, redirect to login
+    if (!token) {
+      toast.error('Please login first to purchase this course.');
+      navigate('/account/login');
+      return;
+    }
+
+    if (!course?.id || buyLoading) return;
+
+    setBuyLoading(true);
+
+    try {
+      const response = await fetch(`${apiUrl}payment/checkout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ course_id: course.id }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.status) {
+        toast.error(data.message || 'Unable to start checkout.');
+        return;
+      }
+
+      // Redirect to Stripe Checkout Page!
+      window.location.href = data.checkout_url;
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setBuyLoading(false);
+    }
+  };
+
   return (
     <>
       <Layout>
@@ -286,7 +356,6 @@ export const Detail = () => {
                     </ul>
                   </div>
                 </div>
-
                 <div className="col-md-12 mt-4">
                   <div className="border bg-white rounded-3 p-4">
                     <h3 className="mb-3 h4">Requirements</h3>
@@ -307,6 +376,14 @@ export const Detail = () => {
                 <div className="col-md-12 mt-4">
                   <div className="border bg-white rounded-3 p-4">
                     <h3 className="h4 mb-3">Course Structure</h3>
+                    <p>
+                      {courseChapters.length}{' '}
+                      {courseChapters.length === 1 ? 'Chapter' : 'Chapters'},{' '}
+                      {totalLectures}{' '}
+                      {totalLectures === 1 ? 'Lecture' : 'Lectures'},{' '}
+                      {hours > 0 ? `${hours}hrs ` : ''}
+                      {minutes}mins
+                    </p>
 
                     <Accordion
                       defaultActiveKey={courseChapters.length ? '0' : undefined}
@@ -321,7 +398,10 @@ export const Detail = () => {
                             <Accordion.Header>
                               {chapter.title}
                               <span className="ms-3 text-muted">
-                                {chapter.lessons?.length ?? 0} lessons
+                                {chapter.lessons?.length ?? 0}{' '}
+                                {chapter.lessons?.length === 1
+                                  ? 'lesson'
+                                  : 'lessons'}
                               </span>
                             </Accordion.Header>
 
@@ -375,7 +455,6 @@ export const Detail = () => {
                     </Accordion>
                   </div>
                 </div>
-
                 <div className="col-md-12 mt-4">
                   <div className="border bg-white rounded-3 p-4">
                     <h3 className="mb-3 h4">Reviews</h3>
@@ -446,8 +525,12 @@ export const Detail = () => {
                   </div>
                   {/* Buttons */}
                   <div className="mt-4">
-                    <button className="btn btn-primary w-100">
-                      <i className="bi bi-ticket"></i> Buy Now
+                    <button
+                      className="btn btn-primary w-100"
+                      onClick={handleBuyNow}
+                      disabled={buyLoading}
+                    >
+                      {buyLoading ? 'Processing...' : 'Buy Now'}
                     </button>
                   </div>
                 </Card.Body>
